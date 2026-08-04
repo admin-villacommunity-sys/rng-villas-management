@@ -2,6 +2,7 @@
 obj/
 *.user
 *.suo
-*.dbmdl
 *.pdb
 *.log
+secrets.json
+appsettings.Development.json

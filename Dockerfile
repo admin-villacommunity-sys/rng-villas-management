@@ -5,7 +5,7 @@ WORKDIR /app
 COPY *.csproj .
 RUN dotnet restore
 
-# Copy everything and build
+# Copy everything else and build
 COPY . .
 RUN dotnet publish -c Release -o /publish
 
@@ -14,7 +14,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
 COPY --from=build /publish .
 
-# Set environment variable
+# Environment variable
 ENV ASPNETCORE_ENVIRONMENT=Production
 
 EXPOSE 8080
