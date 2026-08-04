@@ -1,0 +1,247 @@
+﻿@model IEnumerable<VillaCommunityManagement.Models.Owner>
+
+
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="dashboard-header">
+    <div>
+        <h2>Dashboard</h2>
+        <p>Welcome back, @ViewBag.Username</p>
+    </div>
+    <div class="dashboard-date">
+        @DateTime.Now.ToString("dddd, dd MMMM yyyy")
+    </div>
+</div>
+
+<!-- ========== SUMMARY CARDS ========== -->
+<div class="row g-4">
+
+    <div class="col-lg-3 col-md-6">
+        <div class="dashboard-card">
+            <div class="card-icon">
+                <i class="bi bi-house-door"></i>
+            </div>
+            <h6>Total Villas</h6>
+            <h2>@ViewBag.TotalVillas</h2>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+        <div class="dashboard-card">
+            <div class="card-icon">
+                <i class="bi bi-people"></i>
+            </div>
+            <h6>Total Owners</h6>
+            <h2>@ViewBag.TotalOwners</h2>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+        <div class="dashboard-card">
+            <div class="card-icon text-primary">
+                <i class="bi bi-currency-rupee"></i>
+            </div>
+            <h6>Total Income</h6>
+            <h2>₹ @String.Format("{0:N0}", ViewBag.TotalIncome)</h2>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+        <div class="dashboard-card">
+            <div class="card-icon text-danger">
+                <i class="bi bi-wallet2"></i>
+            </div>
+            <h6>Total Expenses</h6>
+            <h2>₹ @String.Format("{0:N0}", ViewBag.TotalExpense)</h2>
+        </div>
+    </div>
+
+    <div class="col-lg-3 col-md-6">
+        <div class="dashboard-card">
+            <div class="card-icon text-warning">
+                <i class="bi bi-clock-history"></i>
+            </div>
+            <h6>Pending Maintenance</h6>
+            <h2 class="text-danger">@ViewBag.Pending</h2>
+        </div>
+    </div>
+
+</div>
+
+<!-- ========== FINANCIAL SUMMARY + QUICK ACTIONS ========== -->
+<div class="row g-4 mt-2">
+
+    <div class="col-lg-6">
+        <div class="dashboard-panel">
+            <h4>Financial Summary</h4>
+            <table class="table table-borderless">
+                <tr>
+                    <td>Current Balance</td>
+                    <td class="text-end">
+                        ₹ @String.Format("{0:N0}", ViewBag.Balance)
+                    </td>
+                </tr>
+                <tr>
+                    <td>Pending Maintenance</td>
+                    <td class="text-end">
+                        @ViewBag.Pending
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="dashboard-panel">
+            <h4>Quick Actions</h4>
+            <div class="d-grid gap-2">
+                <a asp-controller="Owner" asp-action="Create" class="btn btn-primary">
+                    <i class="bi bi-person-plus"></i> Add Owner
+                </a>
+                <a asp-controller="Maintenance" asp-action="Create" class="btn btn-outline-primary">
+                    <i class="bi bi-tools"></i> Record Maintenance
+                </a>
+                <a asp-controller="Income" asp-action="Create" class="btn btn-outline-primary">
+                    <i class="bi bi-cash"></i> Add Income
+                </a>
+                <a asp-controller="Expenditure" asp-action="Create" class="btn btn-outline-primary">
+                    <i class="bi bi-credit-card"></i> Add Expense
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- ========== RECENT ACTIVITY (NEW) ========== -->
+<hr class="my-4" />
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="dashboard-panel recent-panel">
+            <h5><i class="bi bi-arrow-up-circle text-primary"></i> Recent Income</h5>
+            @if (ViewBag.RecentIncome != null && ViewBag.RecentIncome.Count > 0)
+            {
+                <ul class="list-unstyled recent-list">
+                    @foreach (var item in ViewBag.RecentIncome)
+                    {
+                        <li>
+                            <span class="recent-label">@item.income_source</span>
+                            <span class="recent-value text-success">+₹ @String.Format("{0:N0}", item.Amount)</span>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="text-muted small">No income records yet.</p>
+            }
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="dashboard-panel recent-panel">
+            <h5><i class="bi bi-arrow-down-circle text-danger"></i> Recent Expenses</h5>
+            @if (ViewBag.RecentExpenses != null && ViewBag.RecentExpenses.Count > 0)
+            {
+                <ul class="list-unstyled recent-list">
+                    @foreach (var item in ViewBag.RecentExpenses)
+                    {
+                        <li>
+                            <span class="recent-label">@item.payment_details</span>
+                            <span class="recent-value text-danger">-₹ @String.Format("{0:N0}", item.Amount)</span>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="text-muted small">No expense records yet.</p>
+            }
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="dashboard-panel recent-panel">
+            <h5><i class="bi bi-clock-history text-warning"></i> Recent Maintenance</h5>
+            @if (ViewBag.RecentMaintenance != null && ViewBag.RecentMaintenance.Count > 0)
+            {
+                <ul class="list-unstyled recent-list">
+                    @foreach (var item in ViewBag.RecentMaintenance)
+                    {
+                        <li>
+                            <span class="recent-label">Villa @item.Villa_No</span>
+                            <span class="recent-value @(item.Payment_details ? "text-success" : "text-danger")">
+                                @(item.Payment_details ? "Paid" : "Pending")
+                            </span>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p class="text-muted small">No maintenance records yet.</p>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- ========== VILLA DIRECTORY (with search) ========== -->
+<hr class="my-4" />
+
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <h4 class="mb-0"><i class="bi bi-grid"></i> Villa Directory</h4>
+    <div style="min-width: 250px; max-width: 350px;">
+        <input type="text" id="villaSearch" class="form-control form-control-sm" placeholder="Search by Villa, Owner, or Tenant..." />
+    </div>
+</div>
+
+<div class="row" id="villaContainer">
+    @foreach (var villa in Model)
+    {
+        <div class="col-lg-3 col-md-4 mb-4 villa-item"
+             data-villa="@villa.Villa_No"
+             data-owner="@(villa.Owner_name?.ToLower() ?? "")"
+             data-tenant="@(villa.Tenant_name?.ToLower() ?? "")">
+            <div class="villa-card-new">
+                <h5>Villa @villa.Villa_No</h5>
+                <p><strong>Owner</strong><br />@villa.Owner_name</p>
+                <p><strong>Tenant</strong><br />@villa.Tenant_name</p>
+                <span class="badge @(villa.Status == "Active" ? "bg-success" : villa.Status == "Vacant" ? "bg-danger" : "bg-warning text-dark")">
+                    @villa.Status
+                </span>
+                <br /><br />
+                <a asp-controller="Villa" asp-action="Details" asp-route-id="@villa.Villa_No" class="btn btn-primary btn-sm w-100">
+                    View Details
+                </a>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchBox = document.getElementById('villaSearch');
+            const items = document.querySelectorAll('.villa-item');
+
+            if (searchBox) {
+                searchBox.addEventListener('keyup', function() {
+                    const filter = this.value.toLowerCase().trim();
+                    items.forEach(function(item) {
+                        const villa = item.dataset.villa.toString();
+                        const owner = item.dataset.owner || '';
+                        const tenant = item.dataset.tenant || '';
+                        if (villa.includes(filter) || owner.includes(filter) || tenant.includes(filter)) {
+                            item.style.display = '';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+}

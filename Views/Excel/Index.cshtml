@@ -1,0 +1,77 @@
+﻿@{
+    ViewData["Title"] = "Import / Export";
+}
+
+<div class="container mt-4">
+
+    <h2>Excel Import / Export</h2>
+
+    <hr />
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success">
+
+            @TempData["Message"]
+
+        </div>
+    }
+
+    <div class="row">
+
+        <div class="col-md-6">
+
+            <div class="card shadow">
+
+                <div class="card-body">
+
+                    <h4>Export Owners</h4>
+
+                    <p>Download all owner records as Excel.</p>
+
+                    <a asp-action="ExportOwners"
+                       class="btn btn-success">
+
+                        Export Excel
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+
+            <div class="card shadow">
+
+                <div class="card-body">
+
+                    <h4>Import Owners</h4>
+
+                    <form asp-action="ImportOwners"
+                          method="post"
+                          enctype="multipart/form-data">
+
+                        <input type="file"
+                               name="file"
+                               class="form-control mb-3" />
+
+                        <button class="btn btn-primary">
+
+                            Import Excel
+
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

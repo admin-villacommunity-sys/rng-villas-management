@@ -1,0 +1,50 @@
+﻿@model Expenditure
+
+<h2>Add Expense</h2>
+
+<form asp-action="Create">
+
+	<div class="mb-3">
+
+		<label>Date</label>
+
+		<input asp-for="Payment_date"
+			   type="date"
+			   class="form-control" />
+
+	</div>
+
+	<div class="mb-3">
+
+		<label>Details</label>
+
+		<input asp-for="payment_details"
+			   class="form-control" />
+
+	</div>
+
+	<div class="mb-3">
+
+		<label>Paid By</label>
+
+		<input asp-for="paid_by"
+			   class="form-control" />
+
+	</div>
+
+	<div class="mb-3">
+
+		<label>Amount</label>
+
+		<input asp-for="Amount"
+			   class="form-control" />
+
+	</div>
+
+	<button class="btn btn-success">
+
+		Save
+
+	</button>
+
+</form>

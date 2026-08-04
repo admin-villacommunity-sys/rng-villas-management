@@ -1,0 +1,148 @@
+﻿@using Microsoft.AspNetCore.Http
+@model IEnumerable<VillaCommunityManagement.Models.Expenditure>
+
+@{
+    ViewData["Title"] = "Expenditure";
+    var isAdmin = Context.Session.GetString("UserRole") == "Admin";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+
+        <h2 class="mb-1">Expense Management</h2>
+
+        <p class="text-muted mb-0">
+            Manage all community expenditure records.
+        </p>
+
+    </div>
+
+    @if (isAdmin)
+    {
+        <a asp-action="Create" class="btn btn-primary">
+            Add Expense
+        </a>
+    }
+
+</div>
+
+@if (ViewBag.VillaNo != null)
+{
+    <div class="alert alert-info">
+        Showing records for
+        <strong>Villa @ViewBag.VillaNo</strong>
+    </div>
+}
+
+<div class="card shadow-sm border-0">
+
+    <div class="card-body">
+
+        <div class="row mb-3">
+
+            <div class="col-md-4">
+
+                <input type="text"
+                       id="searchBox"
+                       class="form-control"
+                       placeholder="Search expenses..." />
+
+            </div>
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover align-middle"
+                   id="expenseTable">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>Payment Date</th>
+
+                        <th>Expense Details</th>
+
+                        <th>Paid By</th>
+
+                        <th>Amount</th>
+
+                        <th class="text-center">Actions</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td>@item.Payment_date.ToString("dd-MMM-yyyy")</td>
+
+                            <td>@item.payment_details</td>
+
+                            <td>@item.paid_by</td>
+
+                            <td>₹ @String.Format("{0:N2}", item.Amount)</td>
+
+                            <td class="text-center">
+
+                                <a asp-action="Details"
+                                   asp-route-id="@item.ExpenditureId"
+                                   class="btn btn-outline-primary btn-sm">
+                                    View
+                                </a>
+
+                                @if (isAdmin)
+                                {
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.ExpenditureId"
+                                       class="btn btn-outline-warning btn-sm">
+                                        Edit
+                                    </a>
+
+                                    <a asp-action="Delete"
+                                       asp-route-id="@item.ExpenditureId"
+                                       class="btn btn-outline-danger btn-sm"
+                                       onclick="return confirm('Delete this expense record?');">
+                                        Delete
+                                    </a>
+                                }
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    document.getElementById("searchBox").addEventListener("keyup", function() {
+
+        let value = this.value.toLowerCase();
+
+        document.querySelectorAll("#expenseTable tbody tr").forEach(function(row) {
+
+            row.style.display =
+                row.innerText.toLowerCase().includes(value)
+                    ? ""
+                    : "none";
+
+        });
+
+    });
+
+</script>

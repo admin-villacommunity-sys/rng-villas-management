@@ -1,0 +1,109 @@
+﻿@model VillaCommunityManagement.Models.Maintenance
+
+@{
+    ViewData["Title"] = "Edit Maintenance";
+}
+
+<h2>Edit Maintenance</h2>
+
+<form asp-action="Edit" asp-route-id="@Model.MaintenanceId">
+
+    @Html.HiddenFor(model => model.MaintenanceId)
+
+    <div class="mb-3">
+
+        <label asp-for="Villa_No"></label>
+
+        <input asp-for="Villa_No"
+               class="form-control" />
+
+    </div>
+
+    <div class="mb-3">
+
+        <label asp-for="Month"></label>
+
+        <input asp-for="Month"
+               class="form-control" />
+
+    </div>
+
+    <div class="mb-3">
+
+        <label>Due Date</label>
+
+        <input asp-for="Due"
+               type="date"
+               class="form-control" />
+
+    </div>
+
+    <div class="mb-3" id="paidAmountDiv">
+        <label>Paid Amount</label>
+        <input asp-for="paid"
+               class="form-control"
+               placeholder="Enter amount if paid" />
+    </div>
+
+    <div class="form-check mb-3">
+
+        <input asp-for="Payment_details"
+               class="form-check-input" />
+
+        <label asp-for="Payment_details"
+               class="form-check-label">
+            Payment Completed
+        </label>
+
+    </div>
+
+    <div class="mb-3" id="paymentDateDiv">
+
+        <label>Payment Date</label>
+
+        <input asp-for="payment_date"
+               type="date"
+               class="form-control" />
+
+    </div>
+
+    <button type="submit"
+            class="btn btn-primary">
+        Update
+    </button>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        Cancel
+    </a>
+
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const paymentDetails = document.getElementById('Payment_details');
+        const paidAmountDiv = document.getElementById('paidAmountDiv');
+        const paymentDateDiv = document.getElementById('paymentDateDiv');
+        const paidInput = document.getElementById('paid');
+        const paymentDateInput = document.getElementById('payment_date');
+
+        function toggleFields() {
+            if (paymentDetails.checked) {
+                paidAmountDiv.style.display = 'block';
+                paymentDateDiv.style.display = 'block';
+                paidInput.required = true;
+                paymentDateInput.required = true;
+            } else {
+                paidAmountDiv.style.display = 'none';
+                paymentDateDiv.style.display = 'none';
+                paidInput.required = false;
+                paymentDateInput.required = false;
+                paidInput.value = '';
+                paymentDateInput.value = '';
+            }
+        }
+
+        toggleFields();
+        paymentDetails.addEventListener('change', toggleFields);
+    });
+</script>

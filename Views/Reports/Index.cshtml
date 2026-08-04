@@ -1,0 +1,171 @@
+﻿@{
+    ViewData["Title"] = "Reports";
+}
+
+<h2 class="mb-4">
+    Reports Dashboard
+</h2>
+
+<div class="row">
+
+    <div class="col-md-4 mb-4">
+
+        <div class="card border-primary shadow-sm">
+
+            <div class="card-body">
+
+                <h5>Total Income</h5>
+
+                <h3 class="text-primary">
+
+                    ₹ @String.Format("{0:N2}", ViewBag.TotalIncome)
+
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4 mb-4">
+
+        <div class="card border-danger shadow-sm">
+
+            <div class="card-body">
+
+                <h5>Total Expenses</h5>
+
+                <h3 class="text-danger">
+
+                    ₹ @String.Format("{0:N2}", ViewBag.TotalExpense)
+
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4 mb-4">
+
+        <div class="card border-success shadow-sm">
+
+            <div class="card-body">
+
+                <h5>Current Balance</h5>
+
+                <h3 class="text-success">
+
+                    ₹ @String.Format("{0:N2}", ViewBag.Balance)
+
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="row">
+
+    <div class="col-md-4 mb-4">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h5>Total Villas</h5>
+
+                <h2>@ViewBag.TotalVillas</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4 mb-4">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h5>Residents</h5>
+
+                <h2>@ViewBag.TotalOwners</h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4 mb-4">
+
+        <div class="card shadow-sm">
+
+            <div class="card-body">
+
+                <h5>Pending Maintenance</h5>
+
+                <h2 class="text-danger">
+
+                    @ViewBag.Pending
+
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<hr />
+
+<h3 class="mb-3">
+
+    Available Reports
+
+</h3>
+
+<div class="list-group">
+
+    <a asp-controller="Income"
+       asp-action="Index"
+       class="list-group-item list-group-item-action">
+
+        Monthly Income Report
+
+    </a>
+
+    <a asp-controller="Expenditure"
+       asp-action="Index"
+       class="list-group-item list-group-item-action">
+
+        Monthly Expense Report
+
+    </a>
+
+    <a asp-controller="Maintenance"
+       asp-action="Index"
+       class="list-group-item list-group-item-action">
+
+        Maintenance Collection Report
+
+    </a>
+
+    <a asp-controller="Owner"
+       asp-action="Index"
+       class="list-group-item list-group-item-action">
+
+        Resident Report
+
+    </a>
+
+</div>

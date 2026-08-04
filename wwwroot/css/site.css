@@ -1,0 +1,1154 @@
+/* ===========================================
+   RNG Supra Villas Management System
+   Version 3.1 — SkillCraft Inspired
+=========================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #F1F5F9;
+    color: #1E293B;
+    overflow: auto;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================
+   LAYOUT
+========================================== */
+
+.app-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ==========================================
+   SIDEBAR
+========================================== */
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100vh;
+    background: #FFFFFF;
+    border-right: 1px solid #F1F5F9;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.sidebar-brand {
+    padding: 32px 24px 28px 24px;
+    border-bottom: 1px solid #F8FAFC;
+    background: #FFFFFF;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.brand-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0F172A;
+    letter-spacing: -0.3px;
+}
+
+.brand-subtitle {
+    font-size: 12px;
+    font-weight: 500;
+    color: #94A3B8;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-top: 4px;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    padding: 16px 12px;
+    gap: 2px;
+}
+
+    .sidebar-menu a {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #475569;
+        text-decoration: none;
+        padding: 11px 16px;
+        font-size: 14px;
+        font-weight: 500;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        border-left: 3px solid transparent;
+    }
+
+        .sidebar-menu a i {
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+            color: #94A3B8;
+            transition: color 0.2s ease;
+        }
+
+        .sidebar-menu a:hover {
+            background: #F8FAFC;
+            color: #0F172A;
+        }
+
+            .sidebar-menu a:hover i {
+                color: #1A4D8C;
+            }
+
+        .sidebar-menu a.active {
+            background: #F0F4F8;
+            color: #1A4D8C;
+            border-left-color: #1A4D8C;
+        }
+
+            .sidebar-menu a.active i {
+                color: #1A4D8C;
+            }
+
+/* ==========================================
+   MAIN CONTENT
+========================================== */
+
+.content-area {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ==========================================
+   TOPBAR
+========================================== */
+
+.topbar {
+    position: sticky;
+    top: 0;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-bottom: 1px solid #F1F5F9;
+    padding: 16px 36px;
+    z-index: 500;
+}
+
+.topbar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.page-heading {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0F172A;
+    letter-spacing: -0.2px;
+}
+
+.user-info {
+    text-align: right;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: #0F172A;
+}
+
+.user-role {
+    font-size: 12px;
+    font-weight: 500;
+    color: #94A3B8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ==========================================
+   PAGE CONTENT
+========================================== */
+
+.page-content {
+    flex: 1;
+    padding: 32px 36px 40px 36px;
+}
+
+/* ==========================================
+   FOOTER
+========================================== */
+
+.footer {
+    background: transparent;
+    border-top: 1px solid #F1F5F9;
+    padding: 14px 36px;
+}
+
+.footer-content {
+    font-size: 13px;
+    color: #94A3B8;
+    font-weight: 500;
+}
+
+/* ==========================================
+   CARDS (Borderless, Soft Shadow)
+========================================== */
+
+.card,
+.dashboard-card,
+.dashboard-panel,
+.villa-card-new {
+    background: #FFFFFF;
+    border: none;
+    border-radius: 14px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+    transition: all 0.25s ease;
+}
+
+.dashboard-card,
+.dashboard-panel,
+.villa-card-new {
+    padding: 28px;
+}
+
+    .dashboard-card:hover,
+    .dashboard-panel:hover,
+    .villa-card-new:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.05), 0 2px 8px rgba(0, 0, 0, 0.02);
+    }
+
+.dashboard-panel {
+    padding: 28px;
+    height: 100%;
+}
+
+/* ==========================================
+   DASHBOARD HEADER
+========================================== */
+
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 32px;
+}
+
+    .dashboard-header h2 {
+        font-weight: 800;
+        font-size: 28px;
+        color: #0F172A;
+        letter-spacing: -0.4px;
+    }
+
+    .dashboard-header p {
+        color: #64748B;
+        font-size: 15px;
+        margin-top: 2px;
+    }
+
+.dashboard-date {
+    color: #94A3B8;
+    font-size: 14px;
+    font-weight: 500;
+    background: #FFFFFF;
+    padding: 6px 16px;
+    border-radius: 30px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+/* ==========================================
+   DASHBOARD STATS CARDS
+========================================== */
+
+.dashboard-card {
+    display: flex;
+    flex-direction: column;
+    padding: 26px 28px;
+}
+
+.card-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #94A3B8;
+}
+
+    .card-icon i {
+        transition: transform 0.2s ease;
+    }
+
+.dashboard-card:hover .card-icon i {
+    transform: scale(1.08);
+}
+
+.dashboard-card h6 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #94A3B8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.dashboard-card h2 {
+    font-size: 32px;
+    font-weight: 800;
+    color: #0F172A;
+    margin: 0;
+    letter-spacing: -0.5px;
+}
+
+    .dashboard-card h2.text-danger {
+        color: #EF4444;
+    }
+
+/* ==========================================
+   RECENT ACTIVITY PANELS
+========================================== */
+
+.recent-panel h5 {
+    font-weight: 600;
+    font-size: 15px;
+    color: #0F172A;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+    .recent-panel h5 i {
+        font-size: 18px;
+    }
+
+.recent-list {
+    margin: 0;
+    padding: 0;
+}
+
+    .recent-list li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #F8FAFC;
+        font-size: 14px;
+    }
+
+        .recent-list li:last-child {
+            border-bottom: none;
+        }
+
+.recent-label {
+    color: #475569;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 70%;
+}
+
+.recent-value {
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+    .recent-value.text-success {
+        color: #10B981;
+    }
+
+    .recent-value.text-danger {
+        color: #EF4444;
+    }
+
+/* ==========================================
+   VILLA DIRECTORY CARDS
+========================================== */
+
+.villa-card-new {
+    padding: 24px 24px 20px 24px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+    .villa-card-new h5 {
+        font-weight: 700;
+        font-size: 18px;
+        color: #0F172A;
+        margin-bottom: 12px;
+    }
+
+    .villa-card-new p {
+        font-size: 14px;
+        color: #475569;
+        margin-bottom: 6px;
+    }
+
+        .villa-card-new p strong {
+            color: #94A3B8;
+            font-weight: 500;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            display: block;
+            margin-bottom: 1px;
+        }
+
+    .villa-card-new .badge {
+        font-weight: 600;
+        padding: 4px 12px;
+        border-radius: 30px;
+        font-size: 12px;
+        align-self: flex-start;
+        margin-top: 4px;
+    }
+
+    .villa-card-new .btn {
+        margin-top: auto;
+    }
+
+/* ==========================================
+   TABLES
+========================================== */
+
+.table {
+    background: transparent;
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+}
+
+    .table thead th {
+        background: #F8FAFC;
+        border-bottom: 1px solid #F1F5F9;
+        font-weight: 600;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: #94A3B8;
+        padding: 12px 16px;
+    }
+
+    .table tbody td {
+        padding: 12px 16px;
+        border-bottom: 1px solid #F8FAFC;
+        vertical-align: middle;
+        font-size: 14px;
+        color: #334155;
+    }
+
+    .table tbody tr:hover {
+        background: #FAFBFC;
+    }
+
+    .table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+/* ==========================================
+   FORMS
+========================================== */
+
+.form-control,
+.form-select {
+    border-radius: 10px;
+    border: 1px solid #E2E8F0;
+    padding: 10px 14px;
+    font-size: 14px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    background: #FFFFFF;
+}
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #1A4D8C;
+        box-shadow: 0 0 0 3px rgba(26, 77, 140, 0.08);
+        outline: none;
+    }
+
+.form-label {
+    font-weight: 500;
+    font-size: 14px;
+    color: #334155;
+    margin-bottom: 4px;
+}
+
+/* ==========================================
+   BUTTONS
+========================================== */
+
+.btn {
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 20px;
+    transition: all 0.2s ease;
+    border: none;
+}
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    }
+
+.btn-primary {
+    background: #1A4D8C;
+    color: #FFFFFF;
+}
+
+    .btn-primary:hover {
+        background: #143A6B;
+    }
+
+.btn-outline-primary {
+    background: transparent;
+    border: 1px solid #1A4D8C;
+    color: #1A4D8C;
+}
+
+    .btn-outline-primary:hover {
+        background: #F0F4F8;
+        border-color: #143A6B;
+        color: #143A6B;
+    }
+
+.btn-success {
+    background: #10B981;
+    color: #FFFFFF;
+}
+
+    .btn-success:hover {
+        background: #059669;
+    }
+
+.btn-danger {
+    background: #EF4444;
+    color: #FFFFFF;
+}
+
+    .btn-danger:hover {
+        background: #DC2626;
+    }
+
+.btn-outline-danger {
+    background: transparent;
+    border: 1px solid #EF4444;
+    color: #EF4444;
+}
+
+    .btn-outline-danger:hover {
+        background: #FEF2F2;
+        border-color: #DC2626;
+        color: #DC2626;
+    }
+
+.btn-outline-warning {
+    background: transparent;
+    border: 1px solid #F59E0B;
+    color: #F59E0B;
+}
+
+    .btn-outline-warning:hover {
+        background: #FFFBEB;
+        border-color: #D97706;
+        color: #D97706;
+    }
+
+.btn-outline-success {
+    background: transparent;
+    border: 1px solid #10B981;
+    color: #10B981;
+}
+
+    .btn-outline-success:hover {
+        background: #ECFDF5;
+        border-color: #059669;
+        color: #059669;
+    }
+
+.btn-sm {
+    padding: 6px 14px;
+    font-size: 13px;
+    border-radius: 8px;
+}
+
+.btn i {
+    margin-right: 6px;
+}
+
+/* ==========================================
+   BADGES
+========================================== */
+
+.badge {
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 30px;
+    font-size: 12px;
+}
+
+.bg-success {
+    background: #D1FAE5 !important;
+    color: #065F46 !important;
+}
+
+.bg-danger {
+    background: #FEE2E2 !important;
+    color: #991B1B !important;
+}
+
+.bg-warning {
+    background: #FEF3C7 !important;
+    color: #92400E !important;
+}
+
+/* ==========================================
+   LOGIN PAGE
+========================================== */
+
+.login-page,
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #F1F5F9;
+}
+
+.login-card {
+    width: 420px;
+    background: #FFFFFF;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.04), 0 2px 10px rgba(0, 0, 0, 0.02);
+    border: none;
+}
+
+.login-header {
+    padding: 40px 40px 20px 40px;
+    text-align: center;
+    border-bottom: 1px solid #F8FAFC;
+}
+
+    .login-header h1 {
+        font-size: 26px;
+        font-weight: 800;
+        color: #0F172A;
+        letter-spacing: -0.3px;
+        margin-bottom: 2px;
+    }
+
+    .login-header h2 {
+        font-size: 16px;
+        font-weight: 500;
+        color: #475569;
+    }
+
+    .login-header p {
+        font-size: 14px;
+        color: #94A3B8;
+        margin-top: 8px;
+    }
+
+.login-body {
+    padding: 32px 40px 28px 40px;
+    text-align: center; /* ← This centers everything inside */
+}
+
+    .login-body h3 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #0F172A;
+        margin-bottom: 2px;
+    }
+
+.login-description {
+    color: #94A3B8;
+    font-size: 14px;
+    margin-bottom: 24px;
+    font-weight: 400;
+}
+
+/* ⚠️ But we want the form fields to remain left-aligned */
+.login-body form {
+    text-align: left; /* ← Revert to left for the form */
+}
+
+/* The "Forgot password?" link should also be centered */
+.forgot-link {
+    font-size: 13px;
+    font-weight: 500;
+    color: #94A3B8;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    display: inline-block; /* ← Ensures proper centering */
+}
+
+.login-btn {
+    padding: 12px;
+    font-weight: 600;
+}
+
+.guest-section {
+    margin-top: 24px;
+    padding-top: 24px;
+    border-top: 1px solid #F8FAFC;
+}
+
+    .guest-section p {
+        color: #94A3B8;
+        font-size: 14px;
+        margin-bottom: 12px;
+    }
+
+.login-footer {
+    text-align: center;
+    padding: 16px;
+    border-top: 1px solid #F8FAFC;
+    background: #FAFBFC;
+    color: #94A3B8;
+    font-size: 13px;
+}
+
+/* ==========================================
+   MISC / UTILITY
+========================================== */
+
+hr {
+    border: 0;
+    border-top: 1px solid #F1F5F9;
+    margin: 32px 0;
+}
+
+.alert {
+    border-radius: 10px;
+    border: none;
+    padding: 14px 20px;
+    font-weight: 500;
+}
+
+.alert-success {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.alert-danger {
+    background: #FEE2E2;
+    color: #991B1B;
+}
+
+.alert-info {
+    background: #DBEAFE;
+    color: #1E40AF;
+}
+
+.text-muted {
+    color: #94A3B8 !important;
+}
+
+/* ==========================================
+   MOBILE RESPONSIVE
+========================================== */
+
+@media (max-width: 768px) {
+    .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        border-right: none;
+        border-bottom: 1px solid #F1F5F9;
+    }
+
+    .content-area {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .page-content {
+        padding: 20px;
+    }
+
+    .topbar {
+        padding: 12px 20px;
+    }
+
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .dashboard-card h2 {
+        font-size: 28px;
+    }
+
+    .login-card {
+        width: 95%;
+        margin: 0 10px;
+    }
+
+    .login-header,
+    .login-body {
+        padding: 24px;
+    }
+}
+
+
+/* ==========================================
+   LOGIN PAGE — ENHANCED
+========================================== */
+
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(160deg, #F1F5F9 0%, #E2E8F0 100%);
+    padding: 20px;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Login Card */
+.login-card {
+    width: 100%;
+    background: #FFFFFF;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(15, 23, 42, 0.08), 0 8px 24px rgba(15, 23, 42, 0.04);
+    border: 1px solid rgba(226, 232, 240, 0.6);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .login-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 30px 80px rgba(15, 23, 42, 0.10), 0 10px 30px rgba(15, 23, 42, 0.04);
+    }
+
+/* Header */
+.login-header {
+    padding: 36px 40px 24px 40px;
+    text-align: center;
+    background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.login-logo {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 16px auto;
+    background: #0F2B4F;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #FFFFFF;
+    font-size: 26px;
+    box-shadow: 0 4px 12px rgba(15, 43, 79, 0.20);
+}
+
+.login-header h1 {
+    font-size: 24px;
+    font-weight: 800;
+    color: #0F172A;
+    letter-spacing: -0.3px;
+    margin-bottom: 2px;
+}
+
+.login-header h2 {
+    font-size: 15px;
+    font-weight: 500;
+    color: #475569;
+    letter-spacing: 0.3px;
+}
+
+.login-header p {
+    font-size: 13px;
+    color: #94A3B8;
+    margin-top: 8px;
+    font-weight: 500;
+}
+
+/* Body */
+.login-body {
+    padding: 32px 40px 28px 40px;
+}
+
+    .login-body h3 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #0F172A;
+        margin-bottom: 2px;
+    }
+
+.login-description {
+    color: #94A3B8;
+    font-size: 14px;
+    margin-bottom: 24px;
+    font-weight: 400;
+}
+
+/* Form labels */
+.login-body .form-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+    .login-body .form-label i {
+        color: #94A3B8;
+        font-size: 14px;
+    }
+
+/* Form inputs */
+.login-body .form-control {
+    padding: 11px 16px;
+    border-radius: 10px;
+    border: 1.5px solid #E2E8F0;
+    font-size: 14px;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    background: #FAFBFC;
+}
+
+    .login-body .form-control:focus {
+        border-color: #1A4D8C;
+        box-shadow: 0 0 0 4px rgba(26, 77, 140, 0.08);
+        background: #FFFFFF;
+    }
+
+    .login-body .form-control::placeholder {
+        color: #A0AEC0;
+        font-weight: 400;
+    }
+
+/* Login button */
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    font-weight: 700;
+    font-size: 15px;
+    border-radius: 10px;
+    background: #1A4D8C;
+    border: none;
+    color: #FFFFFF;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+    .login-btn:hover {
+        background: #0F2B4F;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(26, 77, 140, 0.25);
+    }
+
+    .login-btn i {
+        font-size: 18px;
+    }
+
+/* Divider */
+.login-divider {
+    display: flex;
+    align-items: center;
+    margin: 24px 0 20px 0;
+}
+
+    .login-divider::before,
+    .login-divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: #E2E8F0;
+    }
+
+    .login-divider span {
+        padding: 0 16px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #94A3B8;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+/* Guest section */
+.guest-section {
+    text-align: center;
+}
+
+    .guest-section p {
+        color: #94A3B8;
+        font-size: 13px;
+        font-weight: 500;
+        margin-bottom: 12px;
+    }
+
+.guest-btn {
+    width: 100%;
+    padding: 11px;
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 10px;
+    border: 1.5px solid #E2E8F0;
+    color: #475569;
+    background: transparent;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+    .guest-btn:hover {
+        background: #F1F5F9;
+        border-color: #94A3B8;
+        transform: translateY(-1px);
+        color: #1A4D8C;
+    }
+
+    .guest-btn i {
+        font-size: 16px;
+    }
+
+/* Footer */
+.login-footer {
+    text-align: center;
+    padding: 14px 40px;
+    border-top: 1px solid #F1F5F9;
+    background: #FAFBFC;
+    font-size: 13px;
+    color: #94A3B8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+    .login-footer .footer-version {
+        font-weight: 600;
+        color: #475569;
+    }
+
+    .login-footer .footer-divider {
+        color: #E2E8F0;
+    }
+
+/* Note at bottom */
+.login-note {
+    margin-top: 20px;
+    font-size: 13px;
+    color: #94A3B8;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+    .login-note i {
+        color: #1A4D8C;
+        font-size: 14px;
+    }
+
+/* ==========================================
+   RESPONSIVE LOGIN
+========================================== */
+
+@media (max-width: 480px) {
+    .login-header {
+        padding: 28px 24px 20px 24px;
+    }
+
+    .login-body {
+        padding: 24px 24px 20px 24px;
+    }
+
+    .login-footer {
+        padding: 12px 24px;
+        flex-wrap: wrap;
+    }
+
+    .login-logo {
+        width: 48px;
+        height: 48px;
+        font-size: 22px;
+    }
+
+    .login-header h1 {
+        font-size: 20px;
+    }
+}
+
+/* ==========================================
+   LOGIN — Forgot Password Link
+========================================== */
+
+.forgot-link {
+    font-size: 13px;
+    font-weight: 500;
+    color: #94A3B8;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+    .forgot-link:hover {
+        color: #1A4D8C;
+        text-decoration: underline;
+    }
+
+/* ==========================================
+   LOGIN — Guest Button (inline)
+========================================== */
+
+.guest-btn.d-inline-block {
+    display: inline-flex !important;
+    padding: 10px 24px;
+    width: auto;
+    text-decoration: none;
+}
+
+    .guest-btn.d-inline-block:hover {
+        background: #F1F5F9;
+        border-color: #94A3B8;
+        text-decoration: none;
+    }
+
+/* ==========================================
+   LOGIN PAGE — Force center (if needed)
+========================================== */
+
+.login-body h3 {
+    text-align: center !important;
+}
+
+.login-body .login-description {
+    text-align: center !important;
+}
+
+.login-body form {
+    text-align: left !important;
+}

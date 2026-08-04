@@ -1,0 +1,32 @@
+﻿@{
+    var username = Context.Session.GetString("Username");
+    var userRole = Context.Session.GetString("UserRole");
+}
+
+<div class="topbar-content">
+
+    <div>
+
+        <h4 class="page-heading">
+            @ViewData["Title"]
+        </h4>
+
+    </div>
+
+    <div class="user-info">
+
+        <div class="user-name">
+
+            @(string.IsNullOrEmpty(username) ? "Guest" : username)
+
+        </div>
+
+        <div class="user-role">
+
+            @(string.IsNullOrEmpty(userRole) ? "" : userRole)
+
+        </div>
+
+    </div>
+
+</div>

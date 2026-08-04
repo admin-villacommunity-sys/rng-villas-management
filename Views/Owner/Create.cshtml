@@ -1,0 +1,30 @@
+﻿@model VillaCommunityManagement.Models.Owner
+
+<div class="container mt-4">
+
+    <h2>Add Owner</h2>
+
+    <form asp-action="Create">
+
+        <div class="mb-3">
+            <label>Villa Number</label>
+            <input asp-for="Villa_No" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Owner Name</label>
+            <input asp-for="Owner_name" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Tenant Name</label>
+            <input asp-for="Tenant_name" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-success">
+            Save
+        </button>
+
+    </form>
+
+</div>

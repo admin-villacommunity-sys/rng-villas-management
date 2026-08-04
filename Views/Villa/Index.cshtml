@@ -1,0 +1,33 @@
+﻿@model IEnumerable<VillaCommunityManagement.Models.Owner>
+
+@{
+    ViewData["Title"] = "Villa List";
+}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">
+        Villa List
+    </h2>
+
+    <div class="row">
+
+        @foreach (var villa in Model.OrderBy(x => x.Villa_No))
+        {
+            <div class="col-md-2 mb-3">
+
+                <a asp-controller="Villa"
+                   asp-action="Details"
+                   asp-route-id="@villa.Villa_No"
+                   class="btn btn-outline-primary w-100">
+
+                    Villa @villa.Villa_No
+
+                </a>
+
+            </div>
+        }
+
+    </div>
+
+</div>

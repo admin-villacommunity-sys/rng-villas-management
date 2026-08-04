@@ -1,0 +1,54 @@
+﻿@model VillaCommunityManagement.Models.Income
+
+@{
+    ViewData["Title"] = "Add Income";
+}
+
+<h2>Add Income</h2>
+
+<form asp-action="Create">
+
+    <div class="mb-3">
+
+        <label>Month</label>
+
+        <input asp-for="month" class="form-control" />
+
+    </div>
+
+    <div class="mb-3">
+
+        <label>Income Source</label>
+
+        <input asp-for="income_source" class="form-control" />
+
+    </div>
+
+    <div class="mb-3">
+
+        <label>Amount</label>
+
+        <input asp-for="Amount" class="form-control" />
+
+    </div>
+
+    <div class="mb-3">
+
+        <label>Details</label>
+
+        <input asp-for="Income_Details" class="form-control" />
+
+    </div>
+
+    <button class="btn btn-success">
+
+        Save
+
+    </button>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        Cancel
+    </a>
+
+</form>

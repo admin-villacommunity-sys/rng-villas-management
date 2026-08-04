@@ -1,0 +1,85 @@
+﻿@{
+    var controller = ViewContext.RouteData.Values["controller"]?.ToString();
+    var userRole = Context.Session.GetString("UserRole");
+}
+
+<div class="sidebar-brand">
+
+    <div class="brand-title">
+        RNG Supra Villas
+    </div>
+
+    <div class="brand-subtitle">
+        Management System
+    </div>
+
+</div>
+
+<nav class="sidebar-menu">
+
+    <a asp-controller="Dashboard"
+       asp-action="Index"
+       class="@(controller == "Dashboard" ? "active" : "")">
+        <i class="bi bi-speedometer2"></i>
+        Dashboard
+    </a>
+
+    <a asp-controller="Owner"
+       asp-action="Index"
+       class="@(controller == "Owner" ? "active" : "")">
+        <i class="bi bi-people"></i>
+        Residents
+    </a>
+
+    <a asp-controller="Villa"
+       asp-action="Index"
+       class="@(controller == "Villa" ? "active" : "")">
+        <i class="bi bi-house-door"></i>
+        Villas
+    </a>
+
+    <a asp-controller="Maintenance"
+       asp-action="Index"
+       class="@(controller == "Maintenance" ? "active" : "")">
+        <i class="bi bi-tools"></i>
+        Maintenance
+    </a>
+
+    <a asp-controller="Income"
+       asp-action="Index"
+       class="@(controller == "Income" ? "active" : "")">
+        <i class="bi bi-cash-stack"></i>
+        Income
+    </a>
+
+    <a asp-controller="Expenditure"
+       asp-action="Index"
+       class="@(controller == "Expenditure" ? "active" : "")">
+        <i class="bi bi-wallet2"></i>
+        Expenditure
+    </a>
+
+    <a asp-controller="Reports"
+       asp-action="Index"
+       class="@(controller == "Reports" ? "active" : "")">
+        <i class="bi bi-file-earmark-bar-graph"></i>
+        Reports
+    </a>
+
+    @if (userRole == "Admin")
+    {
+        <a asp-controller="Excel"
+           asp-action="Index"
+           class="@(controller == "Excel" ? "active" : "")">
+            <i class="bi bi-gear"></i>
+            Administration
+        </a>
+    }
+
+    <a asp-controller="Login"
+       asp-action="Logout">
+        <i class="bi bi-box-arrow-right"></i>
+        Logout
+    </a>
+
+</nav>

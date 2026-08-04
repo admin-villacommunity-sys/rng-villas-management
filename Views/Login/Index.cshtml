@@ -1,0 +1,89 @@
+﻿@model VillaCommunityManagement.Models.AdminLogin
+
+@{
+    Layout = "_LoginLayout";
+    ViewData["Title"] = "Administrator Login";
+}
+
+<div class="login-page">
+    <div class="login-container">
+
+        <!-- Login Card -->
+        <div class="login-card">
+
+            <!-- Header -->
+            <div class="login-header">
+                <div class="login-logo">
+                    <i class="bi bi-building"></i>
+                </div>
+                <h1>RNG Supra Villas</h1>
+                <p class="header-subtitle">Management System</p>
+            </div>
+
+            <!-- Body -->
+            <div class="login-body">
+
+                <h3 style="text-align: center;">Welcome Back</h3>
+                <p class="login-description" style="text-align: center;">Sign in to continue</p>
+
+                <form method="post" style="text-align: left;">
+
+                    <div class="mb-3">
+                        <label asp-for="Username" class="form-label">Username</label>
+                        <input asp-for="Username"
+                               class="form-control"
+                               placeholder="Enter your username"
+                               autofocus />
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">Password</label>
+                        <input asp-for="Password"
+                               type="password"
+                               class="form-control"
+                               placeholder="Enter your password" />
+                    </div>
+
+                    <div class="mb-3 text-end">
+                        <a asp-action="ForgotPassword" class="forgot-link">Forgot password?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary login-btn">
+                        <i class="bi bi-box-arrow-in-right"></i> Sign In
+                    </button>
+
+                </form>
+
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger mt-3">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        @ViewBag.Error
+                    </div>
+                }
+
+                <!-- Divider -->
+                <div class="login-divider" style="text-align: center;">
+                    <span>or</span>
+                </div>
+
+                <!-- Guest Section -->
+                <div class="guest-section" style="text-align: center;">
+                    <a asp-controller="Login"
+                       asp-action="Viewer"
+                       class="btn btn-outline-secondary guest-btn">
+                        <i class="bi bi-eye"></i> Continue as Guest
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- Footer -->
+            <div class="login-footer">
+                <span>© @DateTime.Now.Year RNG Supra Villas</span>
+            </div>
+
+        </div>
+
+    </div>
+</div>

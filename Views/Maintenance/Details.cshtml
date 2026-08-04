@@ -1,0 +1,91 @@
+﻿@model VillaCommunityManagement.Models.Maintenance
+
+@{
+    ViewData["Title"] = "Maintenance Details";
+}
+
+<div class="card shadow-sm">
+
+    <div class="card-header">
+
+        <h3>Maintenance Details</h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <table class="table">
+
+            <tr>
+                <th width="220">Villa Number</th>
+                <td>@Model.Villa_No</td>
+            </tr>
+
+            <tr>
+                <th>Month</th>
+                <td>@Model.Month</td>
+            </tr>
+
+            <tr>
+                <th>Due Date</th>
+                <td>@Model.Due.ToString("dd-MMM-yyyy")</td>
+            </tr>
+
+            <tr>
+                <th>Paid Amount</th>
+                <td>
+                    @if (Model.paid.HasValue)
+                    {
+                        @String.Format("{0:N2}", Model.paid.Value)
+                    }
+                    else
+                    {
+                        <span class="text-muted">-</span>
+                    }
+                </td>
+            </tr>
+
+            <tr>
+                <th>Status</th>
+                <td>
+                    @if (Model.Payment_details)
+                    {
+                        <span class="badge bg-success">Paid</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-danger">Pending</span>
+                    }
+                </td>
+            </tr>
+
+            <tr>
+                <th>Payment Date</th>
+                <td>
+                    @if (Model.Payment_details && Model.payment_date.HasValue)
+                    {
+                        @Model.payment_date.Value.ToString("dd-MMM-yyyy")
+                    }
+                    else
+                    {
+                        <span class="text-muted">-</span>
+                    }
+                </td>
+            </tr>
+
+        </table>
+
+        <a asp-action="Edit"
+           asp-route-id="@Model.MaintenanceId"
+           class="btn btn-primary">
+            Edit
+        </a>
+
+        <a asp-action="Index"
+           class="btn btn-secondary">
+            Back
+        </a>
+
+    </div>
+
+</div>

@@ -1,0 +1,151 @@
+﻿@using Microsoft.AspNetCore.Http
+@model IEnumerable<VillaCommunityManagement.Models.Income>
+
+@{
+    ViewData["Title"] = "Income";
+    var isAdmin = Context.Session.GetString("UserRole") == "Admin";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+    <div>
+
+        <h2 class="mb-1">Income Management</h2>
+
+        <p class="text-muted">
+            Manage all community income records.
+        </p>
+
+    </div>
+
+    @if (isAdmin)
+    {
+        <a asp-action="Create"
+           class="btn btn-primary">
+            Add Income
+        </a>
+    }
+
+</div>
+
+@if (ViewBag.VillaNo != null)
+{
+    <div class="alert alert-info">
+
+        Showing records for Villa
+        <strong>@ViewBag.VillaNo</strong>
+
+    </div>
+}
+
+<div class="card shadow-sm border-0">
+
+    <div class="card-body">
+
+        <div class="row mb-3">
+
+            <div class="col-md-4">
+
+                <input type="text"
+                       id="searchBox"
+                       class="form-control"
+                       placeholder="Search Income..." />
+
+            </div>
+
+        </div>
+
+        <div class="table-responsive">
+
+            <table class="table table-hover"
+                   id="incomeTable">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th>Month</th>
+
+                        <th>Income Source</th>
+
+                        <th>Amount</th>
+
+                        <th>Details</th>
+
+                        <th class="text-center">Actions</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+
+                            <td>@item.month</td>
+
+                            <td>@item.income_source</td>
+
+                            <td>₹ @String.Format("{0:N2}", item.Amount)</td>
+
+                            <td>@item.Income_Details</td>
+
+                            <td class="text-center">
+
+                                <a asp-action="Details"
+                                   asp-route-id="@item.IncomeId"
+                                   class="btn btn-outline-primary btn-sm">
+                                    View
+                                </a>
+
+                                @if (isAdmin)
+                                {
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.IncomeId"
+                                       class="btn btn-outline-warning btn-sm">
+                                        Edit
+                                    </a>
+
+                                    <a asp-action="Delete"
+                                       asp-route-id="@item.IncomeId"
+                                       class="btn btn-outline-danger btn-sm"
+                                       onclick="return confirm('Delete this income record?');">
+                                        Delete
+                                    </a>
+                                }
+
+                            </td>
+
+                        </tr>
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+    document.getElementById("searchBox").addEventListener("keyup", function() {
+
+        let value = this.value.toLowerCase();
+
+        document.querySelectorAll("#incomeTable tbody tr").forEach(function(row) {
+
+            row.style.display =
+                row.innerText.toLowerCase().includes(value)
+                    ? ""
+                    : "none";
+
+        });
+
+    });
+
+</script>

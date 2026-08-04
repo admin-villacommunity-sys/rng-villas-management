@@ -1,0 +1,64 @@
+﻿@model VillaCommunityManagement.Models.Owner
+
+@{
+    ViewData["Title"] = "Resident Details";
+}
+
+<div class="card shadow-sm">
+
+    <div class="card-header">
+
+        <h3>Resident Details</h3>
+
+    </div>
+
+    <div class="card-body">
+
+        <table class="table">
+
+            <tr>
+                <th width="220">Villa Number</th>
+                <td>@Model.Villa_No</td>
+            </tr>
+
+            <tr>
+                <th>Owner Name</th>
+                <td>@Model.Owner_name</td>
+            </tr>
+
+            <tr>
+                <th>Tenant Name</th>
+                <td>@Model.Tenant_name</td>
+            </tr>
+
+            <tr>
+                <th>Phone</th>
+                <td>@Model.Phone</td>
+            </tr>
+
+            <tr>
+                <th>Email</th>
+                <td>@Model.Email</td>
+            </tr>
+
+            <tr>
+                <th>Status</th>
+                <td>@Model.Status</td>
+            </tr>
+
+        </table>
+
+        <a asp-action="Edit"
+           asp-route-id="@Model.Villa_No"
+           class="btn btn-primary">
+            Edit
+        </a>
+
+        <a asp-action="Index"
+           class="btn btn-secondary">
+            Back
+        </a>
+
+    </div>
+
+</div>
