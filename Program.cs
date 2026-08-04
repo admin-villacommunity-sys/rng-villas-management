@@ -11,6 +11,9 @@ Environment.SetEnvironmentVariable("DOTNET_USE_POLLING_FILE_WATCHER", "true");
 
 var builder = WebApplication.CreateBuilder(args);
 
+
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+Console.WriteLine($"--- Connection String: {(string.IsNullOrEmpty(connectionString) ? "NULL or EMPTY" : "SET")} ---");
 // ==========================================
 // Load User Secrets in Development
 // ==========================================
