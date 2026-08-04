@@ -5,8 +5,6 @@ using VillaCommunityManagement.Services;
 using AspNetCoreRateLimit;
 
 var builder = WebApplication.CreateBuilder(args);
-// At the top of Program.cs, after builder is created
-builder.Configuration.AddEnvironmentVariables();
 
 // ==========================================
 // Load User Secrets in Development
@@ -15,6 +13,11 @@ if (builder.Environment.IsDevelopment())
 {
     builder.Configuration.AddUserSecrets<Program>();
 }
+
+// ==========================================
+// DISABLE FILE WATCHING (Fixes inotify limit issue)
+// ==========================================
+builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: false);
 
 // ==========================================
 // Add services
@@ -41,11 +44,10 @@ builder.Services.Configure<IpRateLimitOptions>(
 builder.Services.AddInMemoryRateLimiting();
 builder.Services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 
+// ==========================================
+// Build and configure the app
+// ==========================================
 var app = builder.Build();
-
-// ==========================================
-// Middleware Pipeline
-// ==========================================
 
 // Error handling (dev vs production)
 if (app.Environment.IsDevelopment())
