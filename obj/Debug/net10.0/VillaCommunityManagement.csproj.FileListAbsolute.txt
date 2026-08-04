@@ -238,3 +238,6 @@ C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\bi
 C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\bin\Debug\net10.0\AspNetCoreRateLimit.dll
 C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\bin\Debug\net10.0\BCrypt-Net-Next.dll
 C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\obj\Debug\net10.0\compressed\kczypztkvp-{0}-k39vjauzst-k39vjauzst.gz
+C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\bin\Debug\net10.0\Npgsql.dll
+C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\bin\Debug\net10.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\obj\Debug\net10.0\VillaCommunityManagement.sourcelink.json

@@ -61,6 +61,7 @@ wwwroot\lib\jquery\dist\jquery.slim.js
 wwwroot\lib\jquery\dist\jquery.slim.min.js
 wwwroot\lib\jquery\dist\jquery.slim.min.map
 wwwroot\lib\jquery\LICENSE.txt
+wwwroot\render.yaml
 C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\wwwroot\css\site.css
 C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\wwwroot\favicon.ico
 C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\wwwroot\js\site.js

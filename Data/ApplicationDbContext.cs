@@ -33,6 +33,18 @@ namespace VillaCommunityManagement.Data
             modelBuilder.Entity<Expenditure>().ToTable("Expenditure");
 
             modelBuilder.Entity<AdminLogin>().ToTable("AdminLogin");
+
+            modelBuilder.Entity<Income>()
+    .Property(e => e.Amount)
+    .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Expenditure>()
+                .Property(e => e.Amount)
+                .HasPrecision(18, 2);
+
+            modelBuilder.Entity<Maintenance>()
+                .Property(e => e.paid)
+                .HasPrecision(18, 2);
         }
     }
 }
