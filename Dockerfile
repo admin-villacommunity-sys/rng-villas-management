@@ -14,8 +14,9 @@ FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
 COPY --from=build /publish .
 
-# Environment variable
+# Set environment variables
 ENV ASPNETCORE_ENVIRONMENT=Production
+ENV DOTNET_USE_POLLING_FILE_WATCHER=true
 
 EXPOSE 8080
 ENTRYPOINT ["dotnet", "VillaCommunityManagement.dll"]

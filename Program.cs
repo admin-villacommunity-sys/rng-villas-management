@@ -4,6 +4,11 @@ using VillaCommunityManagement.Models;
 using VillaCommunityManagement.Services;
 using AspNetCoreRateLimit;
 
+// ==========================================
+// FORCE POLLING FILE WATCHER (Fixes inotify limit)
+// ==========================================
+Environment.SetEnvironmentVariable("DOTNET_USE_POLLING_FILE_WATCHER", "true");
+
 var builder = WebApplication.CreateBuilder(args);
 
 // ==========================================
@@ -15,7 +20,7 @@ if (builder.Environment.IsDevelopment())
 }
 
 // ==========================================
-// DISABLE FILE WATCHING (Fixes inotify limit issue)
+// DISABLE FILE WATCHING (additional safety)
 // ==========================================
 builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: false);
 
