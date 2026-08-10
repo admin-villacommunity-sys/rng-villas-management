@@ -13,8 +13,16 @@ var builder = WebApplication.CreateBuilder(args);
 
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-Console.WriteLine($"--- Connection String: {(string.IsNullOrEmpty(connectionString) ? "NULL or EMPTY" : "SET")} ---");
-// ==========================================
+if (!string.IsNullOrEmpty(connectionString))
+{
+    // Mask the password for safety
+    var masked = System.Text.RegularExpressions.Regex.Replace(connectionString, @"password=[^;]*", "password=***");
+    Console.WriteLine($"--- Connection String: {masked} ---");
+}
+else
+{
+    Console.WriteLine("--- Connection String: NULL or EMPTY ---");
+}// ==========================================
 // Load User Secrets in Development
 // ==========================================
 if (builder.Environment.IsDevelopment())
