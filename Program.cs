@@ -30,18 +30,13 @@ string connectionString;
 // Try to parse as URI
 if (Uri.TryCreate(rawConnectionString, UriKind.Absolute, out Uri? uri))
 {
-    // Extract components
     var userInfo = uri.UserInfo.Split(':');
-    var username = userInfo.Length > 0 ? userInfo[0] : "";
+    var username = userInfo[0];
     var password = userInfo.Length > 1 ? userInfo[1] : "";
     var host = uri.Host;
-    var port = uri.Port; // could be -1
+    var port = uri.Port;
     var database = uri.LocalPath.TrimStart('/');
 
-    // If port is -1, default to 5432
-    if (port == -1) port = 5432;
-
-    // Build Npgsql connection string
     var csBuilder = new NpgsqlConnectionStringBuilder
     {
         Host = host,
@@ -50,17 +45,14 @@ if (Uri.TryCreate(rawConnectionString, UriKind.Absolute, out Uri? uri))
         Password = password,
         Database = database,
         SslMode = SslMode.Require
-        // TrustServerCertificate is obsolete and not needed
     };
     connectionString = csBuilder.ConnectionString;
 
-    // Log without exposing password
     var masked = connectionString.Replace(password, "***", StringComparison.OrdinalIgnoreCase);
     Console.WriteLine($"--- Converted connection string: {masked} ---");
 }
 else
 {
-    // Fallback: use raw string as-is
     connectionString = rawConnectionString;
     Console.WriteLine("--- Using raw connection string (not URI) ---");
     var masked = System.Text.RegularExpressions.Regex.Replace(connectionString, @"Password=[^;]*", "Password=***", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
@@ -121,7 +113,7 @@ else
 }
 
 // ==========================================
-// Migrate database with detailed logging
+// Migrate database and create admin if missing
 // ==========================================
 using (var scope = app.Services.CreateScope())
 {
@@ -131,6 +123,27 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine("--- Starting database migration ---");
         dbContext.Database.Migrate();
         Console.WriteLine("--- Migration completed successfully ---");
+
+        // Check if any admin exists
+        if (!dbContext.AdminLogins.Any())
+        {
+            Console.WriteLine("--- No admin found. Creating default admin... ---");
+            var admin = new AdminLogin
+            {
+                Username = "admin",
+                Password = BCrypt.Net.BCrypt.HashPassword("admin123"),
+                Email = "admin.villacommunity@gmail.com",
+                IsActive = true,
+                CreatedAt = DateTime.Now
+            };
+            dbContext.AdminLogins.Add(admin);
+            dbContext.SaveChanges();
+            Console.WriteLine("--- Default admin created (username: admin, password: admin123) ---");
+        }
+        else
+        {
+            Console.WriteLine($"--- Admin(s) already exist: {dbContext.AdminLogins.Count()} found ---");
+        }
     }
     catch (Exception ex)
     {
