@@ -17,26 +17,16 @@ namespace VillaCommunityManagement.Services
 
         public async System.Threading.Tasks.Task SendEmailAsync(string toEmail, string subject, string body)
         {
-            // Log all available configuration keys (for debugging)
-            Console.WriteLine("--- Available configuration keys (first 20): ---");
-            var allKeys = new List<string>();
-            foreach (var child in _configuration.GetChildren())
-            {
-                allKeys.Add(child.Key);
-                Console.WriteLine($"  Key: {child.Key}, Value: {child.Value ?? "(null)"}");
-            }
-            Console.WriteLine($"--- Total keys found: {allKeys.Count} ---");
-
-            // Try multiple naming conventions for the API key
+            // Read from environment variables or secret file
             var apiKey = _configuration["EmailSettings:ApiKey"]
                          ?? _configuration["EmailSettings__ApiKey"]
                          ?? _configuration["EmailSettings_ApiKey"]
-                         ?? _configuration["EmailSettings.ApiKey"];
+                         ?? Environment.GetEnvironmentVariable("EmailSettings__ApiKey");
 
             Console.WriteLine($"--- Brevo API Key: {(string.IsNullOrEmpty(apiKey) ? "NULL or EMPTY" : "SET (masked)")} ---");
 
             if (string.IsNullOrEmpty(apiKey))
-                throw new Exception("Brevo API key is missing. Please set EmailSettings__ApiKey or EmailSettings_ApiKey in environment variables.");
+                throw new Exception("Brevo API key is missing. Please set EmailSettings__ApiKey in environment variables.");
 
             var apiInstance = new TransactionalEmailsApi();
             apiInstance.Configuration.ApiKey.Add("api-key", apiKey);
