@@ -3,6 +3,7 @@ using VillaCommunityManagement.Data;
 using VillaCommunityManagement.Models;
 using VillaCommunityManagement.Services;
 using AspNetCoreRateLimit;
+using Npgsql;
 
 // ==========================================
 // FORCE POLLING FILE WATCHER (Fixes inotify limit)
@@ -12,9 +13,9 @@ Environment.SetEnvironmentVariable("DOTNET_USE_POLLING_FILE_WATCHER", "true");
 var builder = WebApplication.CreateBuilder(args);
 
 // ==========================================
-// Read and trim the connection string
+// Read and convert the connection string
 // ==========================================
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")?.Trim();
+string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection")?.Trim();
 
 if (string.IsNullOrEmpty(connectionString))
 {
@@ -22,9 +23,21 @@ if (string.IsNullOrEmpty(connectionString))
 }
 else
 {
-    // Mask the password for safety
-    var masked = System.Text.RegularExpressions.Regex.Replace(connectionString, @"password=[^;]*", "password=***");
-    Console.WriteLine($"--- Connection String: {masked} ---");
+    Console.WriteLine($"--- Raw connection string length: {connectionString.Length} ---");
+    // Convert URI format to key-value format
+    try
+    {
+        var npgsqlBuilder = new NpgsqlConnectionStringBuilder(connectionString);
+        connectionString = npgsqlBuilder.ConnectionString;
+        // Mask password in logs
+        var masked = System.Text.RegularExpressions.Regex.Replace(connectionString, @"Password=[^;]*", "Password=***", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        Console.WriteLine($"--- Converted connection string: {masked} ---");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"--- Failed to parse connection string: {ex.Message} ---");
+        throw;
+    }
 }
 
 // ==========================================
@@ -45,9 +58,6 @@ builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnCh
 // ==========================================
 builder.Services.AddControllersWithViews();
 
-// ==========================================
-// Use the connection string variable
-// ==========================================
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseNpgsql(connectionString));
 
