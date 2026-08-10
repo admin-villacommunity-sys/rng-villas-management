@@ -20,13 +20,11 @@ namespace VillaCommunityManagement.Services
         {
             string apiKey = null;
 
-            // ============================================================
             // Try multiple locations for the secret file
-            // ============================================================
             string[] possiblePaths = {
-                "/etc/secrets/brevo.key",   // Render's default secret path
-                "brevo.key",                 // App root
-                "/app/brevo.key"            // Docker app root
+                "/etc/secrets/brevo.key",
+                "brevo.key",
+                "/app/brevo.key"
             };
 
             foreach (var path in possiblePaths)
@@ -38,10 +36,6 @@ namespace VillaCommunityManagement.Services
                         apiKey = File.ReadAllText(path).Trim();
                         Console.WriteLine($"--- API key loaded from: {path} ---");
                         break;
-                    }
-                    else
-                    {
-                        Console.WriteLine($"--- File not found: {path} ---");
                     }
                 }
                 catch (Exception ex)
@@ -64,7 +58,9 @@ namespace VillaCommunityManagement.Services
                 throw new Exception("Brevo API key is missing. Please create brevo.key secret file or set EmailSettings__ApiKey.");
 
             var apiInstance = new TransactionalEmailsApi();
-            apiInstance.Configuration.ApiKey.Add("api-key", apiKey);
+
+            // ✅ FIX: Use indexer instead of Add to avoid "key already exists" error
+            apiInstance.Configuration.ApiKey["api-key"] = apiKey;
 
             var sender = new SendSmtpEmailSender(
                 _configuration["EmailSettings:SenderName"] ?? "RNG Supra Villas",
