@@ -18,23 +18,36 @@ namespace VillaCommunityManagement.Services
 
         public async System.Threading.Tasks.Task SendEmailAsync(string toEmail, string subject, string body)
         {
-            // ============================================================
-            // READ API KEY FROM SECRET FILE (most reliable on Render)
-            // ============================================================
             string apiKey = null;
 
-            // Try to read from the secret file
-            try
+            // ============================================================
+            // Try multiple locations for the secret file
+            // ============================================================
+            string[] possiblePaths = {
+                "/etc/secrets/brevo.key",   // Render's default secret path
+                "brevo.key",                 // App root
+                "/app/brevo.key"            // Docker app root
+            };
+
+            foreach (var path in possiblePaths)
             {
-                if (File.Exists("brevo.key"))
+                try
                 {
-                    apiKey = File.ReadAllText("brevo.key").Trim();
-                    Console.WriteLine("--- API key loaded from brevo.key file ---");
+                    if (File.Exists(path))
+                    {
+                        apiKey = File.ReadAllText(path).Trim();
+                        Console.WriteLine($"--- API key loaded from: {path} ---");
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"--- File not found: {path} ---");
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"--- Failed to read brevo.key: {ex.Message} ---");
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"--- Error reading {path}: {ex.Message} ---");
+                }
             }
 
             // Fallback: try environment variables
@@ -44,7 +57,7 @@ namespace VillaCommunityManagement.Services
                          ?? _configuration["EmailSettings__ApiKey"]
                          ?? _configuration["EmailSettings_ApiKey"]
                          ?? Environment.GetEnvironmentVariable("EmailSettings__ApiKey");
-                Console.WriteLine($"--- API key loaded from environment: {(string.IsNullOrEmpty(apiKey) ? "NULL" : "SET")} ---");
+                Console.WriteLine($"--- API key from environment: {(string.IsNullOrEmpty(apiKey) ? "NULL" : "SET")} ---");
             }
 
             if (string.IsNullOrEmpty(apiKey))
