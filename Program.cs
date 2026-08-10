@@ -137,7 +137,7 @@ using (var scope = app.Services.CreateScope())
                 Password = BCrypt.Net.BCrypt.HashPassword("admin123"),
                 Email = "admin.villacommunity@gmail.com",
                 IsActive = true,
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.UtcNow
             };
             dbContext.AdminLogins.Add(admin);
             dbContext.SaveChanges();
