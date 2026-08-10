@@ -37,6 +37,9 @@ if (Uri.TryCreate(rawConnectionString, UriKind.Absolute, out Uri? uri))
     var port = uri.Port;
     var database = uri.LocalPath.TrimStart('/');
 
+    // Default port to 5432 if not specified
+    if (port <= 0) port = 5432;
+
     var csBuilder = new NpgsqlConnectionStringBuilder
     {
         Host = host,
