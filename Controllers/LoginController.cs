@@ -118,7 +118,7 @@ Regards,<br/>
                 .FirstOrDefault(x =>
                     x.Email == model.Email &&
                     x.PasswordResetToken == model.Token &&
-                    x.PasswordResetTokenExpiry > DateTime.Now &&
+                    x.PasswordResetTokenExpiry > DateTime.UtcNow &&
                     x.IsActive);
 
             if (admin == null)
