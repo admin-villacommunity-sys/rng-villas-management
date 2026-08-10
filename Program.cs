@@ -13,31 +13,57 @@ Environment.SetEnvironmentVariable("DOTNET_USE_POLLING_FILE_WATCHER", "true");
 var builder = WebApplication.CreateBuilder(args);
 
 // ==========================================
-// Read and convert the connection string
+// Read and parse the connection string
 // ==========================================
-string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection")?.Trim();
+string? rawConnectionString = builder.Configuration.GetConnectionString("DefaultConnection")?.Trim();
 
-if (string.IsNullOrEmpty(connectionString))
+if (string.IsNullOrEmpty(rawConnectionString))
 {
     Console.WriteLine("--- Connection String: NULL or EMPTY after trim ---");
+    // You may want to exit or throw here
+    throw new Exception("Connection string is empty");
+}
+
+Console.WriteLine($"--- Raw connection string length: {rawConnectionString.Length} ---");
+
+string connectionString;
+
+// Try to parse as URI
+if (Uri.TryCreate(rawConnectionString, UriKind.Absolute, out Uri? uri))
+{
+    // Extract components
+    var userInfo = uri.UserInfo.Split(':');
+    var username = userInfo[0];
+    var password = userInfo.Length > 1 ? userInfo[1] : "";
+    var host = uri.Host;
+    var port = uri.Port;
+    var database = uri.LocalPath.TrimStart('/');
+
+    // Build Npgsql connection string
+    var csBuilder = new NpgsqlConnectionStringBuilder
+    {
+        Host = host,
+        Port = port,
+        Username = username,
+        Password = password,
+        Database = database,
+        SslMode = SslMode.Require,
+        TrustServerCertificate = true
+    };
+    connectionString = csBuilder.ConnectionString;
+
+    // Log without exposing password
+    var masked = connectionString.Replace(password, "***", StringComparison.OrdinalIgnoreCase);
+    Console.WriteLine($"--- Converted connection string: {masked} ---");
 }
 else
 {
-    Console.WriteLine($"--- Raw connection string length: {connectionString.Length} ---");
-    // Convert URI format to key-value format
-    try
-    {
-        var npgsqlBuilder = new NpgsqlConnectionStringBuilder(connectionString);
-        connectionString = npgsqlBuilder.ConnectionString;
-        // Mask password in logs
-        var masked = System.Text.RegularExpressions.Regex.Replace(connectionString, @"Password=[^;]*", "Password=***", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-        Console.WriteLine($"--- Converted connection string: {masked} ---");
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine($"--- Failed to parse connection string: {ex.Message} ---");
-        throw;
-    }
+    // Fallback: use raw string as-is (maybe it's already key-value)
+    connectionString = rawConnectionString;
+    Console.WriteLine("--- Using raw connection string (not URI) ---");
+    // Mask password for logging
+    var masked = System.Text.RegularExpressions.Regex.Replace(connectionString, @"Password=[^;]*", "Password=***", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+    Console.WriteLine($"--- Connection string: {masked} ---");
 }
 
 // ==========================================
