@@ -85,10 +85,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddSession();
 
+// Configure Email Settings
 builder.Services.Configure<EmailSettings>(
     builder.Configuration.GetSection("EmailSettings"));
 
-builder.Services.AddScoped<EmailService>();
+// Register Brevo email service
+builder.Services.AddScoped<BrevoEmailService>();
 
 // ==========================================
 // Rate Limiting

@@ -92,12 +92,11 @@ namespace VillaCommunityManagement.Controllers
                 {
                     owner = new Owner
                     {
-                        Villa_No = villaNo,
                         Owner_name = ws.Cell(row, 2).GetString() ?? string.Empty,
                         Tenant_name = ws.Cell(row, 3).GetString() ?? string.Empty,
                         Phone = ws.Cell(row, 4).GetString() ?? string.Empty,
                         Email = ws.Cell(row, 5).GetString() ?? string.Empty,
-                        Status = ws.Cell(row, 6).GetString() ?? string.Empty
+                        Status = ws.Cell(row, 6).GetString() ?? string.Empty,
                     };
                     _context.Owners.Add(owner);
                 }

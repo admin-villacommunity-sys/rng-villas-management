@@ -4,24 +4,19 @@ using VillaCommunityManagement.Data;
 using VillaCommunityManagement.Models;
 using VillaCommunityManagement.Services;
 using System.Security.Cryptography;
-using BCrypt.Net;
 
 namespace VillaCommunityManagement.Controllers
 {
     public class LoginController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly EmailService _emailService;
+        private readonly BrevoEmailService _emailService;
 
-        public LoginController(ApplicationDbContext context, EmailService emailService)
+        public LoginController(ApplicationDbContext context, BrevoEmailService emailService)
         {
             _context = context;
             _emailService = emailService;
         }
-
-        // ==========================================
-        // LOGIN
-        // ==========================================
 
         public IActionResult Index()
         {
@@ -34,6 +29,7 @@ namespace VillaCommunityManagement.Controllers
             var admin = _context.AdminLogins
                 .FirstOrDefault(x => x.Username == login.Username && x.IsActive);
 
+            // ✅ Fully qualified BCrypt call
             if (admin != null && BCrypt.Net.BCrypt.Verify(login.Password, admin.Password))
             {
                 HttpContext.Session.SetString("UserRole", "Admin");
@@ -46,10 +42,6 @@ namespace VillaCommunityManagement.Controllers
             ViewBag.Error = "Invalid Username or Password";
             return View(login);
         }
-
-        // ==========================================
-        // FORGOT PASSWORD
-        // ==========================================
 
         public IActionResult ForgotPassword()
         {
@@ -71,14 +63,11 @@ namespace VillaCommunityManagement.Controllers
                 return View(model);
             }
 
-            // Generate a reset token
             var token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
             admin.PasswordResetToken = token;
             admin.PasswordResetTokenExpiry = DateTime.Now.AddHours(24);
-
             await _context.SaveChangesAsync();
 
-            // Send email with reset link
             var resetLink = Url.Action("ResetPassword", "Login", new { token, email = admin.Email }, Request.Scheme);
 
             string body = $@"
@@ -88,11 +77,11 @@ namespace VillaCommunityManagement.Controllers
 <h2 style='color:#1f4e79;'>Password Reset Request</h2>
 <hr/>
 <p>Hello <strong>{admin.Username}</strong>,</p>
-<p>We received a request to reset your password for the <strong>RNG Supra Villas Management System</strong>.</p>
-<p>Click the link below to reset your password:</p>
+<p>We received a request to reset your password.</p>
+<p>Click the link below:</p>
 <p><a href='{resetLink}' style='background:#1A4D8C;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;display:inline-block;'>Reset Password</a></p>
-<p>This link will expire in 24 hours.</p>
-<p>If you did not request this, please ignore this email.</p>
+<p>This link expires in 24 hours.</p>
+<p>If you did not request this, ignore this email.</p>
 <br/>
 Regards,<br/>
 <strong>RNG Supra Villas Management Team</strong>
@@ -105,26 +94,17 @@ Regards,<br/>
                 await _emailService.SendEmailAsync(admin.Email, "Password Reset - RNG Supra Villas", body);
                 ViewBag.Success = "Password reset link has been sent to your email.";
             }
-            catch
+            catch (Exception ex)
             {
-                ViewBag.Error = "Failed to send email. Please try again later.";
+                ViewBag.Error = $"Failed to send email: {ex.Message}";
             }
 
             return View();
         }
 
-        // ==========================================
-        // RESET PASSWORD
-        // ==========================================
-
         public IActionResult ResetPassword(string token, string email)
         {
-            var model = new ResetPasswordViewModel
-            {
-                Token = token,
-                Email = email
-            };
-
+            var model = new ResetPasswordViewModel { Token = token, Email = email };
             return View(model);
         }
 
@@ -147,21 +127,12 @@ Regards,<br/>
                 return View(model);
             }
 
-            // Hash the new password
+            // ✅ Fully qualified BCrypt call
             admin.Password = BCrypt.Net.BCrypt.HashPassword(model.NewPassword);
             admin.PasswordResetToken = null;
             admin.PasswordResetTokenExpiry = null;
+            await _context.SaveChangesAsync();
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                // This will show the real error
-                throw new Exception($"Database error: {ex.InnerException?.Message ?? ex.Message}");
-            }
-            // Notify user
             string body = $@"
 <html>
 <body style='font-family:Segoe UI,Arial,sans-serif;background:#f5f5f9;padding:20px;'>
@@ -169,8 +140,8 @@ Regards,<br/>
 <h2 style='color:#1f4e79;'>Password Changed Successfully</h2>
 <hr/>
 <p>Hello <strong>{admin.Username}</strong>,</p>
-<p>Your password has been successfully changed.</p>
-<p>If you did not make this change, please contact the system administrator immediately.</p>
+<p>Your password has been changed.</p>
+<p>If you did not make this change, contact the administrator.</p>
 <br/>
 Regards,<br/>
 <strong>RNG Supra Villas Management Team</strong>
@@ -184,39 +155,16 @@ Regards,<br/>
             return View("ResetPasswordConfirmation");
         }
 
-        // ==========================================
-        // RESET PASSWORD CONFIRMATION
-        // ==========================================
-
-        public IActionResult ResetPasswordConfirmation()
-        {
-            return View();
-        }
-
-        // ==========================================
-        // VIEWER ACCESS
-        // ==========================================
+        public IActionResult ResetPasswordConfirmation() => View();
 
         public IActionResult Viewer()
         {
             HttpContext.Session.SetString("UserRole", "Viewer");
             HttpContext.Session.SetString("Username", "Viewer");
-
             return RedirectToAction("Index", "Dashboard");
         }
 
-        // ==========================================
-        // ACCESS DENIED
-        // ==========================================
-
-        public IActionResult AccessDenied()
-        {
-            return View();
-        }
-
-        // ==========================================
-        // LOGOUT
-        // ==========================================
+        public IActionResult AccessDenied() => View();
 
         public IActionResult Logout()
         {

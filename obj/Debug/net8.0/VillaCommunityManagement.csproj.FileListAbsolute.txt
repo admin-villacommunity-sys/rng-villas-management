@@ -18,7 +18,6 @@ C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\bi
 C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\bin\Debug\net8.0\VillaCommunityManagement.dll
 C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\bin\Debug\net8.0\VillaCommunityManagement.pdb
 C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\bin\Debug\net8.0\AspNetCoreRateLimit.dll
-C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\bin\Debug\net8.0\BCrypt.Net-Next.dll
 C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\bin\Debug\net8.0\ClosedXML.dll
 C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\bin\Debug\net8.0\ClosedXML.Parser.dll
 C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\bin\Debug\net8.0\DocumentFormat.OpenXml.dll
@@ -127,10 +126,15 @@ C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\ob
 C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\obj\Debug\net8.0\staticwebassets.build.endpoints.json
 C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\obj\Debug\net8.0\swae.build.ex.cache
-C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\obj\Debug\net8.0\VillaCom.04BD5FF0.Up2Date
 C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\obj\Debug\net8.0\VillaCommunityManagement.dll
 C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\obj\Debug\net8.0\refint\VillaCommunityManagement.dll
 C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\obj\Debug\net8.0\VillaCommunityManagement.pdb
 C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\obj\Debug\net8.0\VillaCommunityManagement.genruntimeconfig.cache
 C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\obj\Debug\net8.0\ref\VillaCommunityManagement.dll
+C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\bin\Debug\net8.0\BCrypt-Net-Next.dll
+C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\bin\Debug\net8.0\brevo_csharp.dll
+C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\bin\Debug\net8.0\FubarCoder.RestSharp.Portable.Core.dll
+C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\bin\Debug\net8.0\FubarCoder.RestSharp.Portable.HttpClient.dll
+C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\bin\Debug\net8.0\JsonSubTypes.dll
+C:\Users\tirun\source\repos\VillaCommunityManagement\VillaCommunityManagement\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

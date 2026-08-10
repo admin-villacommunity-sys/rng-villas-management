@@ -9,11 +9,11 @@ namespace VillaCommunityManagement.Controllers
     public class MaintenanceController : Controller
     {
         private readonly ApplicationDbContext _context;
-        private readonly EmailService _emailService;
+        private readonly BrevoEmailService _emailService;
 
         public MaintenanceController(
             ApplicationDbContext context,
-            EmailService emailService)
+            BrevoEmailService emailService)
         {
             _context = context;
             _emailService = emailService;
@@ -86,7 +86,6 @@ namespace VillaCommunityManagement.Controllers
             if (!ModelState.IsValid)
                 return View(maintenance);
 
-            // If Payment_details is false, clear paid and payment_date
             if (!maintenance.Payment_details)
             {
                 maintenance.paid = null;
@@ -125,7 +124,7 @@ namespace VillaCommunityManagement.Controllers
             if (maintenance == null)
                 return NotFound();
 
-            // Get ALL pending records for this villa (including this one)
+            // Get ALL pending records for this villa
             var pendingRecords = _context.Maintenances
                 .Where(x => x.Villa_No == maintenance.Villa_No && !x.Payment_details)
                 .OrderBy(x => x.Due)
