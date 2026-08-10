@@ -11,18 +11,23 @@ Environment.SetEnvironmentVariable("DOTNET_USE_POLLING_FILE_WATCHER", "true");
 
 var builder = WebApplication.CreateBuilder(args);
 
+// ==========================================
+// Read and trim the connection string
+// ==========================================
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")?.Trim();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-if (!string.IsNullOrEmpty(connectionString))
+if (string.IsNullOrEmpty(connectionString))
+{
+    Console.WriteLine("--- Connection String: NULL or EMPTY after trim ---");
+}
+else
 {
     // Mask the password for safety
     var masked = System.Text.RegularExpressions.Regex.Replace(connectionString, @"password=[^;]*", "password=***");
     Console.WriteLine($"--- Connection String: {masked} ---");
 }
-else
-{
-    Console.WriteLine("--- Connection String: NULL or EMPTY ---");
-}// ==========================================
+
+// ==========================================
 // Load User Secrets in Development
 // ==========================================
 if (builder.Environment.IsDevelopment())
@@ -40,9 +45,11 @@ builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnCh
 // ==========================================
 builder.Services.AddControllersWithViews();
 
+// ==========================================
+// Use the connection string variable
+// ==========================================
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseNpgsql(
-        builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(connectionString));
 
 builder.Services.AddSession();
 
@@ -76,10 +83,24 @@ else
     app.UseHsts();
 }
 
+// ==========================================
+// Migrate database with detailed logging
+// ==========================================
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    dbContext.Database.Migrate();
+    try
+    {
+        Console.WriteLine("--- Starting database migration ---");
+        dbContext.Database.Migrate();
+        Console.WriteLine("--- Migration completed successfully ---");
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"--- Migration failed: {ex.Message} ---");
+        Console.WriteLine($"--- Inner exception: {ex.InnerException?.Message} ---");
+        throw;
+    }
 }
 
 app.UseHttpsRedirection();
