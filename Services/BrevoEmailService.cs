@@ -3,7 +3,6 @@ using brevo_csharp.Model;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace VillaCommunityManagement.Services
 {
@@ -16,13 +15,18 @@ namespace VillaCommunityManagement.Services
             _configuration = configuration;
         }
 
+        // Fully qualified Task to remove ambiguity with brevo_csharp.Model.Task
         public async System.Threading.Tasks.Task SendEmailAsync(string toEmail, string subject, string body)
         {
+            // Try multiple naming conventions for the API key
             var apiKey = _configuration["EmailSettings:ApiKey"]
-                         ?? _configuration["EmailSettings__ApiKey"];
+                         ?? _configuration["EmailSettings__ApiKey"]
+                         ?? _configuration["EmailSettings_ApiKey"];
+
+            Console.WriteLine($"--- Brevo API Key: {(string.IsNullOrEmpty(apiKey) ? "NULL or EMPTY" : "SET (masked)")} ---");
 
             if (string.IsNullOrEmpty(apiKey))
-                throw new Exception("Brevo API key is missing.");
+                throw new Exception("Brevo API key is missing. Please set EmailSettings__ApiKey in environment variables.");
 
             var apiInstance = new TransactionalEmailsApi();
             apiInstance.Configuration.ApiKey.Add("api-key", apiKey);
@@ -47,8 +51,8 @@ namespace VillaCommunityManagement.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Brevo email error: {ex.Message}");
-                throw; // re-throw the exception
+                Console.WriteLine($"--- Brevo email error: {ex.Message} ---");
+                throw; // re-throw so the controller can handle it
             }
         }
     }
