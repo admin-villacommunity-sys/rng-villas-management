@@ -65,7 +65,7 @@ namespace VillaCommunityManagement.Controllers
 
             var token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
             admin.PasswordResetToken = token;
-            admin.PasswordResetTokenExpiry = DateTime.Now.AddHours(24);
+            admin.PasswordResetTokenExpiry = DateTime.UtcNow.AddHours(24);
             await _context.SaveChangesAsync();
 
             var resetLink = Url.Action("ResetPassword", "Login", new { token, email = admin.Email }, Request.Scheme);
