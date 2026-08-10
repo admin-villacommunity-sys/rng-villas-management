@@ -11,6 +11,7 @@ using Npgsql;
 Environment.SetEnvironmentVariable("DOTNET_USE_POLLING_FILE_WATCHER", "true");
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.AddEnvironmentVariables();
 
 // ==========================================
 // Read and parse the connection string
