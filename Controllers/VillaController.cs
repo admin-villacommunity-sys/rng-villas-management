@@ -38,10 +38,10 @@ namespace VillaCommunityManagement.Controllers
                 .OrderByDescending(x => x.Due)
                 .ToList();
 
-            // Calculate summary
+            // Calculate summary — FIXED: use ?? 0 to handle null
             var totalPaid = maintenanceRecords
                 .Where(x => x.Payment_details)
-                .Sum(x => x.paid);
+                .Sum(x => x.paid) ?? 0;
 
             var pendingCount = maintenanceRecords
                 .Count(x => !x.Payment_details);
