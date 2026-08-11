@@ -31,36 +31,18 @@ string connectionString;
 // Try to parse as URI
 if (Uri.TryCreate(rawConnectionString, UriKind.Absolute, out Uri? uri))
 {
-    var userInfo = uri.UserInfo.Split(':');
-    var username = userInfo[0];
-    var password = userInfo.Length > 1 ? userInfo[1] : "";
-    var host = uri.Host;
-    var port = uri.Port;
-    var database = uri.LocalPath.TrimStart('/');
-
-    // Default port to 5432 if not specified
-    if (port <= 0) port = 5432;
-
-    var csBuilder = new NpgsqlConnectionStringBuilder
-    {
-        Host = host,
-        Port = port,
-        Username = username,
-        Password = password,
-        Database = database,
-        SslMode = SslMode.Require
-    };
-    connectionString = csBuilder.ConnectionString;
-
-    var masked = connectionString.Replace(password, "***", StringComparison.OrdinalIgnoreCase);
-    Console.WriteLine($"--- Converted connection string: {masked} ---");
+    // Use the raw connection string as-is (URI format)
+    connectionString = rawConnectionString;
+    // Mask password for logging
+    var masked = System.Text.RegularExpressions.Regex.Replace(connectionString, @"password=[^&]*", "password=***");
+    Console.WriteLine($"--- Using raw connection string (URI): {masked} ---");
 }
 else
 {
+    // Not a URI, use as-is (likely key-value)
     connectionString = rawConnectionString;
-    Console.WriteLine("--- Using raw connection string (not URI) ---");
     var masked = System.Text.RegularExpressions.Regex.Replace(connectionString, @"Password=[^;]*", "Password=***", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-    Console.WriteLine($"--- Connection string: {masked} ---");
+    Console.WriteLine($"--- Using raw connection string (key-value): {masked} ---");
 }
 
 // ==========================================
