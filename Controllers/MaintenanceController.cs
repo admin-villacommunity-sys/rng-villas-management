@@ -59,6 +59,11 @@ namespace VillaCommunityManagement.Controllers
             if (!ModelState.IsValid)
                 return View(maintenance);
 
+            // Convert to UTC before saving
+            maintenance.Due = DateTime.SpecifyKind(maintenance.Due, DateTimeKind.Utc);
+            if (maintenance.payment_date.HasValue)
+                maintenance.payment_date = DateTime.SpecifyKind(maintenance.payment_date.Value, DateTimeKind.Utc);
+
             _context.Maintenances.Add(maintenance);
             _context.SaveChanges();
 
@@ -86,6 +91,12 @@ namespace VillaCommunityManagement.Controllers
             if (!ModelState.IsValid)
                 return View(maintenance);
 
+            // Convert to UTC before saving
+            maintenance.Due = DateTime.SpecifyKind(maintenance.Due, DateTimeKind.Utc);
+            if (maintenance.payment_date.HasValue)
+                maintenance.payment_date = DateTime.SpecifyKind(maintenance.payment_date.Value, DateTimeKind.Utc);
+
+            // If Payment_details is false, clear paid and payment_date
             if (!maintenance.Payment_details)
             {
                 maintenance.paid = null;
