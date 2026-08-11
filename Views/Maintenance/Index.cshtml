@@ -10,34 +10,21 @@
 
     <div>
         <h2 class="mb-1">Maintenance Management</h2>
-        <p class="text-muted mb-0">
-            View and manage maintenance payment records.
-        </p>
+        <p class="text-muted mb-0">View and manage maintenance payment records.</p>
     </div>
 
     @if (TempData["Success"] != null)
     {
-        <div class="alert alert-success">
-            @TempData["Success"]
-        </div>
+        <div class="alert alert-success">@TempData["Success"]</div>
     }
-
     @if (TempData["Error"] != null)
     {
-        <div class="alert alert-danger">
-            @TempData["Error"]
-        </div>
+        <div class="alert alert-danger">@TempData["Error"]</div>
     }
 
     @if (isAdmin)
     {
-        <a asp-action="Create" class="btn btn-primary">
-            Add Maintenance
-        </a>
-    }
-
-    @if (isAdmin)
-    {
+        <a asp-action="Create" class="btn btn-primary">Add Maintenance</a>
         <a asp-action="SendAllReminders" class="btn btn-danger">
             <i class="bi bi-envelope-paper"></i> Send All Reminders
         </a>
@@ -46,63 +33,35 @@
 </div>
 
 <div class="card shadow-sm border-0">
-
     <div class="card-body">
-
         <div class="row mb-3">
-
             <div class="col-md-4">
-
-                <input type="text"
-                       id="searchBox"
-                       class="form-control"
-                       placeholder="Search by Villa Number..." />
-
+                <input type="text" id="searchBox" class="form-control" placeholder="Search by Villa Number..." />
             </div>
-
         </div>
 
         <div class="table-responsive">
-
-            <table class="table table-hover align-middle"
-                   id="maintenanceTable">
-
+            <table class="table table-hover align-middle" id="maintenanceTable">
                 <thead class="table-light">
-
                     <tr>
-
                         <th>Villa</th>
-
                         <th>Month</th>
-
                         <th>Due Date</th>
-
+                        <th>Due Amount</th>
                         <th>Paid Amount</th>
-
                         <th>Status</th>
-
                         <th>Payment Date</th>
-
                         <th class="text-center">Actions</th>
-
                     </tr>
-
                 </thead>
-
                 <tbody>
-
                     @foreach (var item in Model)
                     {
                         <tr>
-
-                            <td>
-                                <strong>@item.Villa_No</strong>
-                            </td>
-
+                            <td><strong>@item.Villa_No</strong></td>
                             <td>@item.Month</td>
-
                             <td>@item.Due.ToString("dd-MMM-yyyy")</td>
-
+                            <td>₹ @String.Format("{0:N2}", item.DueAmount)</td>
                             <td>
                                 @if (item.paid.HasValue)
                                 {
@@ -113,26 +72,17 @@
                                     <span class="text-muted">-</span>
                                 }
                             </td>
-
                             <td>
-
                                 @if (item.Payment_details)
                                 {
-                                    <span class="badge bg-success">
-                                        Paid
-                                    </span>
+                                    <span class="badge bg-success">Paid</span>
                                 }
                                 else
                                 {
-                                    <span class="badge bg-danger">
-                                        Pending
-                                    </span>
+                                    <span class="badge bg-danger">Pending</span>
                                 }
-
                             </td>
-
                             <td>
-
                                 @if (item.Payment_details && item.payment_date.HasValue)
                                 {
                                     @item.payment_date.Value.ToString("dd-MMM-yyyy")
@@ -141,74 +91,35 @@
                                 {
                                     <span class="text-muted">-</span>
                                 }
-
                             </td>
-
                             <td class="text-center">
-
-                                <a asp-action="Details"
-                                   asp-route-id="@item.MaintenanceId"
-                                   class="btn btn-outline-primary btn-sm">
-                                    View
-                                </a>
-
+                                <a asp-action="Details" asp-route-id="@item.MaintenanceId" class="btn btn-outline-primary btn-sm">View</a>
                                 @if (isAdmin)
                                 {
-                                    <a asp-action="Edit"
-                                       asp-route-id="@item.MaintenanceId"
-                                       class="btn btn-outline-warning btn-sm">
-                                        Edit
-                                    </a>
-
-                                    <a asp-action="Delete"
-                                       asp-route-id="@item.MaintenanceId"
-                                       class="btn btn-outline-danger btn-sm"
-                                       onclick="return confirm('Delete this maintenance record?');">
-                                        Delete
-                                    </a>
-
+                                    <a asp-action="Edit" asp-route-id="@item.MaintenanceId" class="btn btn-outline-warning btn-sm">Edit</a>
+                                    <a asp-action="Delete" asp-route-id="@item.MaintenanceId" class="btn btn-outline-danger btn-sm" onclick="return confirm('Delete this maintenance record?');">Delete</a>
                                     @if (!item.Payment_details)
                                     {
-                                        <a asp-action="SendReminder"
-                                           asp-route-id="@item.MaintenanceId"
-                                           class="btn btn-outline-success btn-sm">
+                                        <a asp-action="SendReminder" asp-route-id="@item.MaintenanceId" class="btn btn-outline-success btn-sm">
                                             <i class="bi bi-envelope"></i> Reminder
                                         </a>
                                     }
                                 }
-
                             </td>
-
                         </tr>
                     }
-
                 </tbody>
-
             </table>
-
         </div>
-
     </div>
-
 </div>
 
 <script>
-
     document.getElementById("searchBox").addEventListener("keyup", function() {
-
         var value = this.value.toLowerCase();
-
         var rows = document.querySelectorAll("#maintenanceTable tbody tr");
-
         rows.forEach(function(row) {
-
-            row.style.display =
-                row.innerText.toLowerCase().includes(value)
-                    ? ""
-                    : "none";
-
+            row.style.display = row.innerText.toLowerCase().includes(value) ? "" : "none";
         });
-
     });
-
 </script>

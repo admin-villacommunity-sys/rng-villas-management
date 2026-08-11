@@ -11,71 +11,45 @@
     @Html.HiddenFor(model => model.MaintenanceId)
 
     <div class="mb-3">
-
         <label asp-for="Villa_No"></label>
-
-        <input asp-for="Villa_No"
-               class="form-control" />
-
+        <input asp-for="Villa_No" class="form-control" />
     </div>
 
     <div class="mb-3">
-
         <label asp-for="Month"></label>
-
-        <input asp-for="Month"
-               class="form-control" />
-
+        <input asp-for="Month" class="form-control" />
     </div>
 
     <div class="mb-3">
-
         <label>Due Date</label>
+        <input asp-for="Due" type="date" class="form-control" />
+    </div>
 
-        <input asp-for="Due"
-               type="date"
-               class="form-control" />
-
+    <!-- NEW: Due Amount -->
+    <div class="mb-3">
+        <label>Total Due Amount</label>
+        <input asp-for="DueAmount" class="form-control" placeholder="Enter total due amount" />
     </div>
 
     <div class="mb-3" id="paidAmountDiv">
         <label>Paid Amount</label>
-        <input asp-for="paid"
-               class="form-control"
-               placeholder="Enter amount if paid" />
+        <input asp-for="paid" class="form-control" placeholder="Enter amount if paid" />
     </div>
 
     <div class="form-check mb-3">
-
-        <input asp-for="Payment_details"
-               class="form-check-input" />
-
-        <label asp-for="Payment_details"
-               class="form-check-label">
+        <input asp-for="Payment_details" class="form-check-input" />
+        <label asp-for="Payment_details" class="form-check-label">
             Payment Completed
         </label>
-
     </div>
 
     <div class="mb-3" id="paymentDateDiv">
-
         <label>Payment Date</label>
-
-        <input asp-for="payment_date"
-               type="date"
-               class="form-control" />
-
+        <input asp-for="payment_date" type="date" class="form-control" />
     </div>
 
-    <button type="submit"
-            class="btn btn-primary">
-        Update
-    </button>
-
-    <a asp-action="Index"
-       class="btn btn-secondary">
-        Cancel
-    </a>
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
 
 </form>
 

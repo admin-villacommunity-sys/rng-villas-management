@@ -5,32 +5,28 @@
 }
 
 <div class="card shadow-sm">
-
     <div class="card-header">
-
         <h3>Maintenance Details</h3>
-
     </div>
-
     <div class="card-body">
-
         <table class="table">
-
             <tr>
                 <th width="220">Villa Number</th>
                 <td>@Model.Villa_No</td>
             </tr>
-
             <tr>
                 <th>Month</th>
                 <td>@Model.Month</td>
             </tr>
-
             <tr>
                 <th>Due Date</th>
                 <td>@Model.Due.ToString("dd-MMM-yyyy")</td>
             </tr>
-
+            <!-- NEW: Due Amount -->
+            <tr>
+                <th>Total Due Amount</th>
+                <td>₹ @String.Format("{0:N2}", Model.DueAmount)</td>
+            </tr>
             <tr>
                 <th>Paid Amount</th>
                 <td>
@@ -44,7 +40,6 @@
                     }
                 </td>
             </tr>
-
             <tr>
                 <th>Status</th>
                 <td>
@@ -58,7 +53,6 @@
                     }
                 </td>
             </tr>
-
             <tr>
                 <th>Payment Date</th>
                 <td>
@@ -72,20 +66,9 @@
                     }
                 </td>
             </tr>
-
         </table>
 
-        <a asp-action="Edit"
-           asp-route-id="@Model.MaintenanceId"
-           class="btn btn-primary">
-            Edit
-        </a>
-
-        <a asp-action="Index"
-           class="btn btn-secondary">
-            Back
-        </a>
-
+        <a asp-action="Edit" asp-route-id="@Model.MaintenanceId" class="btn btn-primary">Edit</a>
+        <a asp-action="Index" class="btn btn-secondary">Back</a>
     </div>
-
 </div>
