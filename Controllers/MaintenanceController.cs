@@ -161,10 +161,12 @@ namespace VillaCommunityManagement.Controllers
             var tableRows = string.Empty;
             foreach (var record in pendingRecords)
             {
+                string amountDisplay = record.paid.HasValue ? $"₹ {record.paid.Value:N2}" : "₹ 0.00";
                 tableRows += $@"
 <tr>
     <td style='padding:10px;border:1px solid #ddd;'>{record.Month}</td>
     <td style='padding:10px;border:1px solid #ddd;'>{record.Due:dd-MMM-yyyy}</td>
+    <td style='padding:10px;border:1px solid #ddd;'>{amountDisplay}</td>
     <td style='padding:10px;border:1px solid #ddd;color:red;'>Pending</td>
 </tr>";
             }
@@ -188,6 +190,7 @@ namespace VillaCommunityManagement.Controllers
 <tr style='background:#f0f0f0;'>
     <th style='padding:10px;border:1px solid #ddd;'>Month</th>
     <th style='padding:10px;border:1px solid #ddd;'>Due Date</th>
+    <th style='padding:10px;border:1px solid #ddd;'>Amount</th>
     <th style='padding:10px;border:1px solid #ddd;'>Status</th>
 </tr>
 {tableRows}
@@ -257,10 +260,12 @@ Regards,<br/>
                 var tableRows = string.Empty;
                 foreach (var record in records)
                 {
+                    string amountDisplay = record.paid.HasValue ? $"₹ {record.paid.Value:N2}" : "₹ 0.00";
                     tableRows += $@"
 <tr>
     <td style='padding:8px;border:1px solid #ddd;'>{record.Month}</td>
     <td style='padding:8px;border:1px solid #ddd;'>{record.Due:dd-MMM-yyyy}</td>
+    <td style='padding:8px;border:1px solid #ddd;'>{amountDisplay}</td>
 </tr>";
                 }
 
@@ -283,6 +288,7 @@ Regards,<br/>
 <tr style='background:#f0f0f0;'>
     <th style='padding:10px;border:1px solid #ddd;'>Month</th>
     <th style='padding:10px;border:1px solid #ddd;'>Due Date</th>
+    <th style='padding:10px;border:1px solid #ddd;'>Amount</th>
 </tr>
 {tableRows}
 </table>
