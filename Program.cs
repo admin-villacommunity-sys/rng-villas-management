@@ -11,7 +11,6 @@ using Npgsql;
 Environment.SetEnvironmentVariable("DOTNET_USE_POLLING_FILE_WATCHER", "true");
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Configuration.AddEnvironmentVariables();
 
 // ==========================================
 // Read and parse the connection string
@@ -31,18 +30,35 @@ string connectionString;
 // Try to parse as URI
 if (Uri.TryCreate(rawConnectionString, UriKind.Absolute, out Uri? uri))
 {
-    // Use the raw connection string as-is (URI format)
-    connectionString = rawConnectionString;
-    // Mask password for logging
-    var masked = System.Text.RegularExpressions.Regex.Replace(connectionString, @"password=[^&]*", "password=***");
-    Console.WriteLine($"--- Using raw connection string (URI): {masked} ---");
+    var userInfo = uri.UserInfo.Split(':');
+    var username = userInfo[0];
+    var password = userInfo.Length > 1 ? userInfo[1] : "";
+    var host = uri.Host;
+    var port = uri.Port;
+    var database = uri.LocalPath.TrimStart('/');
+
+    if (port <= 0) port = 5432;
+
+    var csBuilder = new NpgsqlConnectionStringBuilder
+    {
+        Host = host,
+        Port = port,
+        Username = username,
+        Password = password,
+        Database = database,
+        SslMode = SslMode.Require
+    };
+    connectionString = csBuilder.ConnectionString;
+
+    var masked = connectionString.Replace(password, "***", StringComparison.OrdinalIgnoreCase);
+    Console.WriteLine($"--- Converted connection string: {masked} ---");
 }
 else
 {
-    // Not a URI, use as-is (likely key-value)
     connectionString = rawConnectionString;
+    Console.WriteLine("--- Using raw connection string (not URI) ---");
     var masked = System.Text.RegularExpressions.Regex.Replace(connectionString, @"Password=[^;]*", "Password=***", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
-    Console.WriteLine($"--- Using raw connection string (key-value): {masked} ---");
+    Console.WriteLine($"--- Connection string: {masked} ---");
 }
 
 // ==========================================
@@ -68,11 +84,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddSession();
 
-// Configure Email Settings
 builder.Services.Configure<EmailSettings>(
     builder.Configuration.GetSection("EmailSettings"));
 
-// Register Brevo email service
 builder.Services.AddScoped<BrevoEmailService>();
 
 // ==========================================
@@ -111,6 +125,20 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine("--- Starting database migration ---");
         dbContext.Database.Migrate();
         Console.WriteLine("--- Migration completed successfully ---");
+
+        // ============================================================
+        // Ensure DueAmount column exists (for PostgreSQL)
+        // ============================================================
+        try
+        {
+            dbContext.Database.ExecuteSqlRaw(
+                "ALTER TABLE \"Maintenance\" ADD COLUMN IF NOT EXISTS \"DueAmount\" decimal(18,2) NOT NULL DEFAULT 0;");
+            Console.WriteLine("--- Ensured DueAmount column exists ---");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"--- Could not add DueAmount: {ex.Message} ---");
+        }
 
         // Check if any admin exists
         if (!dbContext.AdminLogins.Any())

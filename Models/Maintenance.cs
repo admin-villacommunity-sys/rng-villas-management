@@ -18,9 +18,14 @@ namespace VillaCommunityManagement.Models
         [Required]
         public DateTime Due { get; set; }
 
+        // NEW: Total amount due for this month
+        [Required]
+        [Column(TypeName = "decimal(18,2)")]
+        public decimal DueAmount { get; set; } = 0;
+
+        // Amount already paid (can be partial)
         public decimal? paid { get; set; }
 
-        [Required]
         public bool Payment_details { get; set; }
 
         public DateTime? payment_date { get; set; }
