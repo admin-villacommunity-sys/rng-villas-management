@@ -65,13 +65,17 @@
                     <div class="col-4">
                         <div class="bg-success bg-opacity-10 p-3 rounded-3 text-center">
                             <div class="small text-muted text-uppercase fw-semibold">Total Paid</div>
-                            <h4 class="text-success fw-bold mb-0">₹ @String.Format("{0:N0}", ViewBag.TotalPaid)</h4>
+                            <h4 class="text-success fw-bold mb-0">
+                                ₹ @((ViewBag.TotalPaid ?? 0).ToString("N0"))
+                            </h4>
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="bg-danger bg-opacity-10 p-3 rounded-3 text-center">
                             <div class="small text-muted text-uppercase fw-semibold">Pending</div>
-                            <h4 class="text-danger fw-bold mb-0">@ViewBag.PendingCount</h4>
+                            <h4 class="text-danger fw-bold mb-0">
+                                @(ViewBag.PendingCount ?? 0)
+                            </h4>
                         </div>
                     </div>
                     <div class="col-4">
@@ -107,6 +111,7 @@
                         <tr>
                             <th>Month</th>
                             <th>Due Date</th>
+                            <th>Due Amount</th>
                             <th>Paid Amount</th>
                             <th>Status</th>
                             <th>Payment Date</th>
@@ -118,6 +123,7 @@
                             <tr>
                                 <td>@item.Month</td>
                                 <td>@item.Due.ToString("dd-MMM-yyyy")</td>
+                                <td>₹ @String.Format("{0:N2}", item.DueAmount)</td>
                                 <td>
                                     @if (item.paid.HasValue)
                                     {
