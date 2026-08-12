@@ -1,17 +1,14 @@
-﻿@{
-    var userRole = Context.Session.GetString("UserRole");
-    var username = Context.Session.GetString("Username");
+﻿﻿@{
+var userRole = Context.Session.GetString("UserRole");
+var username = Context.Session.GetString("Username");
 }
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-
     <meta charset="utf-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>
         @(ViewData["Title"] != null ? ViewData["Title"] + " | " : "")
         RNG Supra Villas Management System
@@ -25,37 +22,43 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
-
 </head>
 
 <body>
 
     <div class="app-container">
 
-        <aside class="sidebar">
-
-            @await Html.PartialAsync("_Sidebar")
-
-        </aside>
+        <!-- Sidebar (includes overlay) -->
+        @await Html.PartialAsync("_Sidebar")
 
         <div class="content-area">
 
             <header class="topbar">
-
-                @await Html.PartialAsync("_Topbar")
-
+                <div class="topbar-content">
+                    <div class="topbar-left">
+                        <!-- Hamburger toggle (mobile only) -->
+                        <button class="mobile-toggle" id="sidebarToggle" aria-label="Toggle navigation">
+                            <i class="bi bi-list"></i>
+                        </button>
+                        <h4 class="page-heading">@ViewData["Title"]</h4>
+                    </div>
+                    <div class="user-info">
+                        <div class="user-name">
+                            @(string.IsNullOrEmpty(username) ? "Guest" : username)
+                        </div>
+                        <div class="user-role">
+                            @(string.IsNullOrEmpty(userRole) ? "" : userRole)
+                        </div>
+                    </div>
+                </div>
             </header>
 
             <main class="page-content">
-
                 @RenderBody()
-
             </main>
 
             <footer class="footer">
-
                 @await Html.PartialAsync("_Footer")
-
             </footer>
 
         </div>
@@ -63,6 +66,50 @@
     </div>
 
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Mobile sidebar toggle script -->
+    <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const toggle = document.getElementById('sidebarToggle');
+                const sidebar = document.getElementById('sidebar');
+                const overlay = document.getElementById('sidebarOverlay');
+
+                if (toggle && sidebar && overlay) {
+                    function closeSidebar() {
+                        sidebar.classList.remove('open');
+                        overlay.classList.remove('active');
+                    }
+
+                    function openSidebar() {
+                        sidebar.classList.add('open');
+                        overlay.classList.add('active');
+                    }
+
+                    toggle.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        if (sidebar.classList.contains('open')) {
+                            closeSidebar();
+                        } else {
+                            openSidebar();
+                        }
+                    });
+
+                    overlay.addEventListener('click', closeSidebar);
+
+                    document.addEventListener('keydown', function(e) {
+                        if (e.key === 'Escape') {
+                            closeSidebar();
+                        }
+                    });
+
+                    window.addEventListener('resize', function() {
+                        if (window.innerWidth > 768) {
+                            closeSidebar();
+                        }
+                    });
+                }
+            });
+    </script>
 
     @await RenderSectionAsync("Scripts", required: false)
 
