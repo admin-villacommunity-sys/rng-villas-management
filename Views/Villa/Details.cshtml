@@ -2,6 +2,12 @@
 
 @{
     ViewData["Title"] = "Villa Details";
+
+    // Safe extraction of ViewBag values
+    decimal totalPaid = ViewBag.TotalPaid != null ? (decimal)ViewBag.TotalPaid : 0;
+    int pendingCount = ViewBag.PendingCount != null ? (int)ViewBag.PendingCount : 0;
+    DateTime? lastPaymentDate = ViewBag.LastPaymentDate != null ? (DateTime)ViewBag.LastPaymentDate : (DateTime?)null;
+    var maintenanceRecords = ViewBag.MaintenanceRecords as List<VillaCommunityManagement.Models.Maintenance> ?? new List<VillaCommunityManagement.Models.Maintenance>();
 }
 
 <div class="container-fluid px-0">
@@ -65,26 +71,22 @@
                     <div class="col-4">
                         <div class="bg-success bg-opacity-10 p-3 rounded-3 text-center">
                             <div class="small text-muted text-uppercase fw-semibold">Total Paid</div>
-                            <h4 class="text-success fw-bold mb-0">
-                                ₹ @((ViewBag.TotalPaid ?? 0).ToString("N0"))
-                            </h4>
+                            <h4 class="text-success fw-bold mb-0">₹ @totalPaid.ToString("N0")</h4>
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="bg-danger bg-opacity-10 p-3 rounded-3 text-center">
                             <div class="small text-muted text-uppercase fw-semibold">Pending</div>
-                            <h4 class="text-danger fw-bold mb-0">
-                                @(ViewBag.PendingCount ?? 0)
-                            </h4>
+                            <h4 class="text-danger fw-bold mb-0">@pendingCount</h4>
                         </div>
                     </div>
                     <div class="col-4">
                         <div class="bg-info bg-opacity-10 p-3 rounded-3 text-center">
                             <div class="small text-muted text-uppercase fw-semibold">Last Payment</div>
                             <h5 class="fw-bold mb-0">
-                                @if (ViewBag.LastPaymentDate != null)
+                                @if (lastPaymentDate.HasValue)
                                 {
-                                    @(((DateTime)ViewBag.LastPaymentDate).ToString("dd-MMM-yyyy"))
+                                    @lastPaymentDate.Value.ToString("dd-MMM-yyyy")
                                 }
                                 else
                                 {
@@ -103,7 +105,7 @@
     <div class="dashboard-panel">
         <h5><i class="bi bi-clock-history text-primary"></i> Maintenance History</h5>
 
-        @if (ViewBag.MaintenanceRecords != null && ((List<VillaCommunityManagement.Models.Maintenance>)ViewBag.MaintenanceRecords).Any())
+        @if (maintenanceRecords.Any())
         {
             <div class="table-responsive">
                 <table class="table align-middle">
@@ -118,7 +120,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in ViewBag.MaintenanceRecords)
+                        @foreach (var item in maintenanceRecords)
                         {
                             <tr>
                                 <td>@item.Month</td>
