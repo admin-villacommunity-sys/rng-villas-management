@@ -228,6 +228,107 @@ Regards,<br/>
             return RedirectToAction(nameof(Index));
         }
 
+
+        // SEND REMINDER BY VILLA NUMBER (for Villa Details page)
+        [AdminOnly]
+        public async Task<IActionResult> SendReminderByVilla(int villaNo)
+        {
+            // Find ALL pending maintenance records for this villa
+            var pendingRecords = _context.Maintenances
+                .Where(x => x.Villa_No == villaNo && !x.Payment_details)
+                .OrderBy(x => x.Due)
+                .ToList();
+
+            if (!pendingRecords.Any())
+            {
+                TempData["Error"] = "No pending maintenance records found for this villa.";
+                return RedirectToAction("Details", "Villa", new { id = villaNo });
+            }
+
+            // Find the owner
+            var owner = _context.Owners
+                .FirstOrDefault(x => x.Villa_No == villaNo);
+
+            if (owner == null || string.IsNullOrWhiteSpace(owner.Email))
+            {
+                TempData["Error"] = "Owner email not found.";
+                return RedirectToAction("Details", "Villa", new { id = villaNo });
+            }
+
+            string subject = "Maintenance Payment Reminder - RNG Supra Villas";
+
+            // Build table rows
+            var tableRows = string.Empty;
+            foreach (var record in pendingRecords)
+            {
+                string dueDisplay = $"₹ {record.DueAmount:N2}";
+                string paidDisplay = record.paid.HasValue ? $"₹ {record.paid.Value:N2}" : "₹ 0.00";
+                tableRows += $@"
+<tr>
+    <td style='padding:10px;border:1px solid #ddd;'>{record.Month}</td>
+    <td style='padding:10px;border:1px solid #ddd;'>{record.Due:dd-MMM-yyyy}</td>
+    <td style='padding:10px;border:1px solid #ddd;'>{dueDisplay}</td>
+    <td style='padding:10px;border:1px solid #ddd;'>{paidDisplay}</td>
+    <td style='padding:10px;border:1px solid #ddd;color:red;'>Pending</td>
+</tr>";
+            }
+
+            string body = $@"
+<html>
+<body style='font-family:Segoe UI,Arial,sans-serif;background:#f5f5f5;padding:20px;'>
+
+<div style='max-width:650px;background:white;padding:30px;border-radius:8px;border:1px solid #ddd;'>
+
+<h2 style='color:#1f4e79;'>RNG Supra Villas Management</h2>
+
+<hr/>
+
+<p>Dear <strong>{owner.Owner_name}</strong>,</p>
+
+<p>This is a friendly reminder that the following maintenance payments are still pending for <strong>Villa {villaNo}</strong>.</p>
+
+<table style='border-collapse:collapse;width:100%;margin-top:20px;'>
+
+<tr style='background:#f0f0f0;'>
+    <th style='padding:10px;border:1px solid #ddd;'>Month</th>
+    <th style='padding:10px;border:1px solid #ddd;'>Due Date</th>
+    <th style='padding:10px;border:1px solid #ddd;'>Total Due</th>
+    <th style='padding:10px;border:1px solid #ddd;'>Paid</th>
+    <th style='padding:10px;border:1px solid #ddd;'>Status</th>
+</tr>
+{tableRows}
+</table>
+
+<br/>
+
+<p>
+Please make the pending payments at your earliest convenience.
+</p>
+
+<p>
+If you have already paid, kindly ignore this email.
+</p>
+
+<br/>
+
+Regards,<br/>
+<strong>RNG Supra Villas Management Team</strong>
+
+</div>
+
+</body>
+</html>";
+
+            await _emailService.SendEmailAsync(
+                owner.Email,
+                subject,
+                body);
+
+            TempData["Success"] = $"Reminder sent to {owner.Email} for {pendingRecords.Count} pending month(s).";
+            return RedirectToAction("Details", "Villa", new { id = villaNo });
+        }
+
+
         // SEND ALL REMINDERS (for all villas)
         [AdminOnly]
         public async Task<IActionResult> SendAllReminders()

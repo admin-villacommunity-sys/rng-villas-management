@@ -178,7 +178,7 @@
         </a>
         @if (!string.IsNullOrWhiteSpace(Model.Email))
         {
-            <a asp-controller="Maintenance" asp-action="SendReminder" asp-route-id="@Model.Villa_No" class="btn btn-outline-warning">
+            <a asp-controller="Maintenance" asp-action="SendReminderByVilla" asp-route-villaNo="@Model.Villa_No" class="btn btn-outline-warning">
                 <i class="bi bi-envelope"></i> Send Reminder
             </a>
         }
